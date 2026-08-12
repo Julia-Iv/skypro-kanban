@@ -1191,4 +1191,4 @@ function App() {
 
 export default App;
 
-// Готово к проверке Pull Request
+// Проверка
