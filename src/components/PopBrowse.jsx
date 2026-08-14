@@ -1,28 +1,14 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import heroImg from "./assets/hero.png";
-import "./App.css";
-import Header from "./components/Header";
-import Main from "./components/main";
-import PopExit from "./components/PopExit";
-import PopBrowseForm from "./components/PopBrowseForm";
-import PopNewCardCalendar from "./components/PopNewCardCalendar";
-import ThemeDomCategories from "./components/ThemeDomCategories";
-import PopBrowseBtnBrowse from "./components/PopBrowseBtnBrowse";
-import PopBrowseBtnExit from "./components/PopBrowseBtnEdit";
-import PopNewCard from "./components/PopNewCard";
+import PopBrowseForm from "./PopBrowseForm";
+import PopNewCardCalendar from "./PopNewCardCalendar";
+import ThemeDomCategories from "./ThemeDomCategories";
+import PopBrowseBtnBrowse from "./PopBrowseBtnBrowse";
+import PopBrowseBtnExit from "./PopBrowseBtnEdit";
 
-function App() {
-  const [count, setCount] = useState(0);
+const PopBrowse = () => {
 
-  return (
-    <>
-      <div className="wrapper">
-        <PopExit />
-        <PopNewCard />
-        
-        <div className="pop-browse" id="popBrowse">
+    return (
+
+<div className="pop-browse" id="popBrowse">
           <div className="pop-browse__container">
             <div className="pop-browse__block">
               <div className="pop-browse__content">
@@ -66,15 +52,8 @@ function App() {
               </div>
             </div>
           </div>
-        </div> 
-        <Header />
-        <Main />
-        
-      </div>
-      
-    </>
-  );
+        </div>
+    )
 }
 
-export default App;
-
+export default PopBrowse
