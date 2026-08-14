@@ -1,17 +1,10 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import heroImg from "./assets/hero.png";
 import "./App.css";
 import Header from "./components/Header";
 import Main from "./components/main";
 import PopExit from "./components/PopExit";
-import PopBrowseForm from "./components/PopBrowseForm";
-import PopNewCardCalendar from "./components/PopNewCardCalendar";
-import ThemeDomCategories from "./components/ThemeDomCategories";
-import PopBrowseBtnBrowse from "./components/PopBrowseBtnBrowse";
-import PopBrowseBtnExit from "./components/PopBrowseBtnEdit";
 import PopNewCard from "./components/PopNewCard";
+import PopBrowse from "./components/PopBrowse";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -21,52 +14,8 @@ function App() {
       <div className="wrapper">
         <PopExit />
         <PopNewCard />
+        <PopBrowse />
         
-        <div className="pop-browse" id="popBrowse">
-          <div className="pop-browse__container">
-            <div className="pop-browse__block">
-              <div className="pop-browse__content">
-                <div className="pop-browse__top-block">
-                  <h3 className="pop-browse__ttl">Название задачи</h3>
-                  <div className="categories__theme theme-top _orange _active-category">
-                    <p className="_orange">Web Design</p>
-                  </div>
-                </div>
-                <div className="pop-browse__status status">
-                  <p className="status__p subttl">Статус</p>
-                  <div className="status__themes">
-                    <div className="status__theme _hide">
-                      <p>Без статуса</p>
-                    </div>
-                    <div className="status__theme _gray">
-                      <p className="_gray">Нужно сделать</p>
-                    </div>
-                    <div className="status__theme _hide">
-                      <p>В работе</p>
-                    </div>
-                    <div className="status__theme _hide">
-                      <p>Тестирование</p>
-                    </div>
-                    <div className="status__theme _hide">
-                      <p>Готово</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="pop-browse__wrap">
-                  
-                  <PopBrowseForm />
-                  <PopNewCardCalendar />
-                  
-                </div>
-               
-                <ThemeDomCategories />
-                <PopBrowseBtnBrowse />
-                <PopBrowseBtnExit />
-                
-              </div>
-            </div>
-          </div>
-        </div> 
         <Header />
         <Main />
         

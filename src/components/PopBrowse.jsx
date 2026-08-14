@@ -1,8 +1,7 @@
 import PopBrowseForm from "./PopBrowseForm";
 import PopNewCardCalendar from "./PopNewCardCalendar";
 import ThemeDomCategories from "./ThemeDomCategories";
-import PopBrowseBtnBrowse from "./PopBrowseBtnBrowse";
-import PopBrowseBtnExit from "./PopBrowseBtnEdit";
+import PopBrowseBtn from "./PopBrowseBtn"
 
 const PopBrowse = () => {
 
@@ -46,8 +45,7 @@ const PopBrowse = () => {
                 </div>
                
                 <ThemeDomCategories />
-                <PopBrowseBtnBrowse />
-                <PopBrowseBtnExit />
+                <PopBrowseBtn />
                 
               </div>
             </div>
