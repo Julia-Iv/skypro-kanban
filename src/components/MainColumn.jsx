@@ -1,4 +1,6 @@
+
 const MainColumn = () => {
+    
 
     return (
                 <div className="main__column">
@@ -62,4 +64,4 @@ const MainColumn = () => {
                 </div>
     )
 }
-export default MainColumn
+export default MainColumn 
