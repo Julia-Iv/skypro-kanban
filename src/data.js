@@ -1,4 +1,4 @@
-export const CardList = [
+export const cardsData = [
    {
     id: 1,
     topic: "Web Design",
