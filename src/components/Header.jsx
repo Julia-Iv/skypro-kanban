@@ -1,4 +1,16 @@
+import { useState } from "react";
+
+
 const Header = () => {
+
+  //управление видимостью модалки
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
+  //переключение состояния открыть-закрыть
+  const toggleMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsMenuOpen((prev) => !prev);
+  };
 
      return (
   <header className="header">
@@ -6,29 +18,39 @@ const Header = () => {
             <div className="header__block">
               <div className="header__logo _show _light">
                 <a href="" target="_self">
-                  <img src="public/logo.png" alt="logo" />
+                  <img src="./public/logo.png" alt="logo" />
                 </a>
               </div>
               <div className="header__logo _dark">
                 <a href="" target="_self">
-                  <img src="public/logo_dark.png" alt="logo" />
+                  <img src="./public/logo_dark.png" alt="logo" />
                 </a>
               </div>
-              <nav className="header__nav">
+              <nav className="header__nav" style={{ position: 'relative' }}>
                 <button
                   className="header__btn-main-new _hover01"
                   id="btnMainNew"
                 >
                   <a href="#popNewCard">Создать новую задачу</a>
                 </button>
-                <a href="#user-set-target" className="header__user _hover02">
+                
+                <div className = "header__user _hover02" 
+                onClick={toggleMenu} 
+                style={{ cursor: 'pointer', userSelect: 'none' }}>
                   Ivan Ivanov
-                </a>
-                <div
-                  className="header__pop-user-set pop-user-set"
-                  id="user-set-target"
-                >
-                  {/*<a href="">x</a> */}
+                </div>
+
+                
+                  {isMenuOpen && (
+              <div 
+                className="header__pop-user-set pop-user-set" 
+                id="user-set-react"
+                style={{ 
+                display: 'block',
+                
+                 }} // Принудительно показываем, обходя старый CSS :target
+              >
+                  
                   <p className="pop-user-set__name">Ivan Ivanov</p>
                   <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
                   <div className="pop-user-set__theme">
@@ -43,6 +65,7 @@ const Header = () => {
                     <a href="#popExit">Выйти</a>
                   </button>
                 </div>
+                  )}
               </nav>
             </div>
           </div>
