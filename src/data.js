@@ -1,38 +1,38 @@
 export const cardsData = [
-   {
+  {
     id: 1,
     topic: "Web Design",
     title: "Название задачи",
     date: "30.10.23",
-    status: "Без статуса"
+    status: "Без статуса",
   },
   {
     id: 2,
     topic: "Research",
     title: "Название задачи",
     date: "30.10.23",
-    status: "Без статуса"
+    status: "Без статуса",
   },
   {
     id: 3,
     topic: "Web Design",
     title: "Название задачи",
     date: "30.10.23",
-    status: "Без статуса"
+    status: "Без статуса",
   },
   {
     id: 4,
     topic: "Copywriting",
     title: "Название задачи",
     date: "30.10.23",
-    status: "Без статуса"
+    status: "Без статуса",
   },
   {
     id: 5,
     topic: "Research",
     title: "Название задачи",
     date: "30.10.23",
-    status: "Без статуса"
+    status: "Без статуса",
   },
   // НУЖНО СДЕЛАТЬ
   {
@@ -40,7 +40,7 @@ export const cardsData = [
     topic: "Research",
     title: "Название задачи",
     date: "30.10.23",
-    status: "Нужно сделать"
+    status: "Нужно сделать",
   },
   // В РАБОТЕ
   {
@@ -48,21 +48,21 @@ export const cardsData = [
     topic: "Research",
     title: "Название задачи",
     date: "30.10.23",
-    status: "В работе"
+    status: "В работе",
   },
   {
     id: 8,
     topic: "Copywriting",
     title: "Название задачи",
     date: "30.10.23",
-    status: "В работе"
+    status: "В работе",
   },
   {
     id: 9,
     topic: "Web Design",
     title: "Название задачи",
     date: "30.10.23",
-    status: "В работе"
+    status: "В работе",
   },
   // ТЕСТИРОВАНИЕ
   {
@@ -70,7 +70,7 @@ export const cardsData = [
     topic: "Research",
     title: "Название задачи",
     date: "30.10.23",
-    status: "Тестирование"
+    status: "Тестирование",
   },
   // ГОТОВО
   {
@@ -78,6 +78,6 @@ export const cardsData = [
     topic: "Research",
     title: "Название задачи",
     date: "30.10.23",
-    status: "Готово"
-  }
+    status: "Готово",
+  },
 ];
