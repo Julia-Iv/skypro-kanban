@@ -7,8 +7,6 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false); 
   //переключение состояния открыть-закрыть
   const toggleMenu = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
     setIsMenuOpen((prev) => !prev);
   };
 
@@ -40,16 +38,12 @@ const Header = () => {
                   Ivan Ivanov
                 </div>
 
-                
-                  {isMenuOpen && (
-              <div 
-                className="header__pop-user-set pop-user-set" 
-                id="user-set-react"
-                style={{ 
-                display: 'block',
-                
-                 }} // Принудительно показываем, обходя старый CSS :target
-              >
+                 { isMenuOpen && (
+                 <div 
+                  
+                  className="header__pop-user-set pop-user-set"
+                  id="use-set-react"
+                 >  
                   
                   <p className="pop-user-set__name">Ivan Ivanov</p>
                   <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
@@ -65,7 +59,7 @@ const Header = () => {
                     <a href="#popExit">Выйти</a>
                   </button>
                 </div>
-                  )}
+     )}
               </nav>
             </div>
           </div>
