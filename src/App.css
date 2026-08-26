@@ -801,8 +801,7 @@ body {
     text-align: center;
     z-index: 2;
 }
-/*
-.main {
+/*.main {
     width: 100%;
     background-color: #EAEEF6;
 }
@@ -832,8 +831,7 @@ body {
     line-height: 1;
     text-transform: uppercase;
 }
-
-.cards {
+/*.cards {
     width: 100%;
     display: block;
     position: relative;
@@ -917,7 +915,7 @@ body {
     line-height: 13px;
     color: #94A6BE;
     letter-spacing: 0.2px;
-}
+}*/
 
 @media screen and (max-width: 1200px) {
     
