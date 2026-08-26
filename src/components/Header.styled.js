@@ -3,18 +3,14 @@ export const StyledHeader = styled.header`
   width: 100%;
   margin: 0 auto;
   background-color: #ffffff;
-box-sizing: border-box;
 `;
 
 export const HeaderBlock = styled.div`
   height: 70px;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: nowrap !important;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  top: 0;
-  left: 0;
   padding: 0 10px;
   gap: 15px;
 `;
@@ -33,6 +29,7 @@ export const HeaderNav = styled.nav`
   align-items: center;
   justify-content: flex-end;
   flex-grow: 1;
+  position: relative;
 `;
 
 export const CreateTaskLink = styled.a`
@@ -97,6 +94,10 @@ flex-shrink: 0;
     flex-shrink: 0;
     transition: transform 0.2s ease, border-color 0.2s ease;
   }
+&[data-open="true"]::after {
+    transform: rotate(135deg);
+  }
+
   &:hover {
     color: #33399b;
   }
