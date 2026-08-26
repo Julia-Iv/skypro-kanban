@@ -1,4 +1,12 @@
 import { useState } from "react";
+import {
+  StyledHeader,
+  HeaderBlock,
+  HeaderLogo,
+  HeaderNav,
+  CreateTaskLink,
+  HeaderUser,
+} from "./components/Header.styled";
 
 const Header = () => {
   //управление видимостью модалки
