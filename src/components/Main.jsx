@@ -1,3 +1,11 @@
+import { useState } from "react";
+import {
+  StyledMain,
+  MainBlock,
+  MainContent,
+  MainColumn
+} from "./Main.styled";
+
 import Column from "./column";
 
 const Main = () => {
@@ -30,20 +38,21 @@ const Main = () => {
   ];
 
   return (
-    <main className="main">
+    <StyledMain>
       <div className="container">
-        <div className="main__block">
-          <div className="main__content">
+        <MainBlock>
+          <MainContent>
             {/* Рендерим колонки и передаем в них соответствующие массивы Card */}
+           
             <Column title="Без статуса" tasks={tasksNoStatus} />
             <Column title="Нужно сделать" tasks={tasksNoStatus} />
             <Column title="В работе" tasks={tasksInWork} />
             <Column title="Тестирование" tasks={tasksNoStatus} />
             <Column title="Готово" tasks={tasksNoStatus} />
-          </div>
-        </div>
+          </MainContent>
+        </MainBlock>
       </div>
-    </main>
+    </StyledMain>
   );
 };
 

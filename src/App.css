@@ -801,7 +801,7 @@ body {
     text-align: center;
     z-index: 2;
 }
-
+/*
 .main {
     width: 100%;
     background-color: #EAEEF6;
@@ -820,7 +820,7 @@ body {
     margin: 0 auto;
     display: block;
 }
-
+*/
 .column__title {
     padding: 0 10px;
     margin: 15px 0;
@@ -920,7 +920,8 @@ body {
 }
 
 @media screen and (max-width: 1200px) {
-    .main__block {
+    
+    /*.main__block {
         width: 100%;
         margin: 0 auto;
         padding: 40px 0 64px;
@@ -932,7 +933,7 @@ body {
         width: 100%;
         margin: 0 auto;
         display: block;
-    }
+    }*/
     .cards {
         width: 100%;
         display: flex;
