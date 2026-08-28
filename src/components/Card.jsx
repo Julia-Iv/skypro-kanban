@@ -19,11 +19,11 @@ const Card = ({ themeClass, themeText, title, date }) => {
           <CardTheme $theme={themeClass}>
             <p>{themeText}</p>
           </CardTheme>
-            <CardBtn>
+          <CardBtn>
               <div></div>
               <div></div>
               <div></div>
-            </CardBtn>
+          </CardBtn>
         </CardGroup>
         <CardContent>
           <a href="" target="_blank" rel="noreferrer">

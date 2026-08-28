@@ -14,7 +14,7 @@ const PopBrowseForm = () => {
                         className="form-browse__area"
                         name="text"
                         id="textArea01"
-                        readonly
+                        readOnly
                         placeholder="Введите описание задачи..."
                       ></textarea>
                     </div>

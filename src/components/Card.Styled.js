@@ -1,4 +1,4 @@
-import styled, { keyframes} from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const cardAnimation = keyframes`
   from {
@@ -24,7 +24,7 @@ export const CardsContainer = styled.div`
 `;
 export const CardsItem = styled.div`
   padding: 5px;
-  animation-name: card-animation;
+  animation-name: ${cardAnimation};
   animation-duration: 500ms;
   animation-timing-function: linear;
 `;
@@ -55,7 +55,6 @@ const themeStyles = {
   _purple: { bg: "#E6E6FA", color: "#9370DB" },
   _green: { bg: "#E0FFF0", color: "#2E8B57" },
 };
-
 
 export const CardTheme = styled.div`
   width: auto;
