@@ -4,6 +4,7 @@ import {
   CardsItem,
   CardsCard,
   CardGroup,
+  CardTheme,
   CardBtn,
   CardTitle,
   CardContent,
@@ -23,7 +24,6 @@ const Card = ({ themeClass, themeText, title, date }) => {
               <div></div>
               <div></div>
             </CardBtn>
-          </a>
         </CardGroup>
         <CardContent>
           <a href="" target="_blank" rel="noreferrer">

@@ -937,7 +937,7 @@ body {
         display: flex;
         overflow-y: auto;
     }
-    .cards__card {
+   /* .cards__card {
         width: 220px;
         height: 130px;
         background-color: #FFFFFF;
@@ -947,7 +947,7 @@ body {
         align-items: flex-start;
         justify-content: stretch;
         padding: 15px 13px 19px;
-    }
+    }*/
 }
 @media screen and (max-width: 660px) {
     .pop-new-card {

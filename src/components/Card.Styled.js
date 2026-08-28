@@ -1,4 +1,15 @@
-import styled from "styled-components";
+import styled, { keyframes} from "styled-components";
+
+const cardAnimation = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 export const CardsContainer = styled.div`
   width: 100%;
@@ -20,7 +31,7 @@ export const CardsItem = styled.div`
 
 export const CardsCard = styled.div`
   width: 220px;
-  height: 130px;
+  min-height: 140px;
   background-color: #ffffff;
   border-radius: 10px;
   display: flex;
@@ -39,15 +50,29 @@ export const CardGroup = styled.div`
   justify-content: space-between;
 `;
 
+const themeStyles = {
+  _orange: { bg: "#FFE4C4", color: "#FF8C00" },
+  _purple: { bg: "#E6E6FA", color: "#9370DB" },
+  _green: { bg: "#E0FFF0", color: "#2E8B57" },
+};
+
+
 export const CardTheme = styled.div`
   width: auto;
   height: 20px;
   padding: 5px 14px;
   border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${(props) => themeStyles[props.$theme]?.bg || "#FFE4C4"};
+
   p {
     font-size: 10px;
     font-weight: 600;
     line-height: 10px;
+    color: ${(props) => themeStyles[props.$theme]?.color || "#FF8C00"};
   }
 `;
 
