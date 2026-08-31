@@ -8,24 +8,27 @@ import {
   PopExitNo,
 } from "./PopExit.styled";
 
-const PopExit = ({ onClose }) => {
+const PopExit = ({ onClose, onConfirm }) => {
+  const handleCansel = (e) => {
+    e.preventDefault();
+    onClose(); //вызываем функцию закрытия модалки
+  };
+
   return (
     <PopExitContainer id="popExit">
-        <PopExitBlock>
-          <PopExitTitle>
-            Выйти из аккаунта?
-          </PopExitTitle>
-          <form className="pop-exit__form" id="formExit" action="#">
-            <PopExitFormGroup>
-              <PopExitYes id="exitYes">
-                <a href="modal/signin.html">Да, выйти</a>{" "}
-              </PopExitYes>
-              <PopExitNo id="exitNo" onClick ={onClose}>
-                <a href="main.html">Нет, остаться</a>{" "}
-              </PopExitNo>
-            </PopExitFormGroup>
-          </form>
-        </PopExitBlock>
+      <PopExitBlock>
+        <PopExitTitle>Выйти из аккаунта?</PopExitTitle>
+        <form className="pop-exit__form" id="formExit" action="#">
+          <PopExitFormGroup>
+            <PopExitYes id="exitYes" onClick={onConfirm} type="button">
+              Да, выйти
+            </PopExitYes>
+            <PopExitNo id="exitNo" onClick={handleCansel} type="button">
+              Нет, остаться
+            </PopExitNo>
+          </PopExitFormGroup>
+        </form>
+      </PopExitBlock>
     </PopExitContainer>
   );
 };

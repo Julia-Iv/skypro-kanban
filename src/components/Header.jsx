@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PopExit from "./PopExit";
 import {
   StyledHeader,
   HeaderBlock,
@@ -11,17 +12,22 @@ import {
 const Header = () => {
   //управление видимостью модалки
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPopExitOpen, setIsPopExitOpen] = useState(false);
   //переключение состояния открыть-закрыть
   const toggleMenu = (e) => {
     setIsMenuOpen((prev) => !prev);
   };
+  const handleLogout = () => {
+    console.log("Выход из аккаунта");
+    setIsPopExitOpen(false);
+  }
 
   return (
     <StyledHeader>
       <div className="container">
         <HeaderBlock>
           <HeaderLogo>
-            <a href="" target="_self">
+            <a href="#" target="_self">
               <img src="./public/logo.png" alt="logo" />
             </a>
           </HeaderLogo>
@@ -49,14 +55,23 @@ const Header = () => {
                   <p>Темная тема</p>
                   <input type="checkbox" className="checkbox" name="checkbox" />
                 </div>
-                <button type="button" className="_hover03">
-                  <a href="#popExit">Выйти</a>
+                <button type="button" className="_hover03"
+                onClick={() => {
+                  setIsPopExitOpen(true);
+                  setIsMenuOpen(false);
+                }}> Выйти
                 </button>
               </div>
             )}
           </HeaderNav>
         </HeaderBlock>
       </div>
+      {isPopExitOpen && (
+        <PopExit 
+          onClose={() => setIsPopExitOpen(false)} 
+          onConfirm={handleLogout}
+        />
+      )}
     </StyledHeader>
   );
 };

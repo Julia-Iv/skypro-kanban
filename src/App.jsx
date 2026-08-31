@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Main from "./components/Main.jsx";
-import PopExit from "./components/PopExit";
 import PopNewCard from "./components/PopNewCard";
 import PopBrowse from "./components/PopBrowse";
 import { cardsData } from "./data.js";
@@ -21,7 +20,6 @@ function App() {
 
   return (
     <div className="wrapper" style={appStyles}>
-      <PopExit />
       <PopNewCard />
       <PopBrowse />
       {isLoading ? (
