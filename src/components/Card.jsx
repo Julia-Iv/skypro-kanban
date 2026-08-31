@@ -11,10 +11,10 @@ import {
   CardDate,
 } from "./Card.styled";
 
-const Card = ({ themeClass, themeText, title, date }) => {
+const Card = ({ themeClass, themeText, title, date, onClickCard }) => {
   return (
     <CardsItem>
-      <CardsCard>
+      <CardsCard onClick={onClickCard}>
         <CardGroup>
           <CardTheme $theme={themeClass}>
             <p>{themeText}</p>
@@ -26,9 +26,7 @@ const Card = ({ themeClass, themeText, title, date }) => {
           </CardBtn>
         </CardGroup>
         <CardContent>
-          <a href="" target="_blank" rel="noreferrer">
             <CardTitle>{title}</CardTitle>
-          </a>
           <CardDate>
             <svg
               xmlns="http://w3.org"

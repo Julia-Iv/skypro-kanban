@@ -3,19 +3,20 @@ import PopNewCardCalendar from "./PopNewCardCalendar";
 import ThemeDomCategories from "./ThemeDomCategories";
 import PopBrowseBtn from "./PopBrowseBtn"
 
-const PopBrowse = () => {
+const PopBrowse = ({card, onClose}) => {
+  if(!card) return null;
 
     return (
 
-<div className="pop-browse" id="popBrowse">
+<div className="pop-browse" id="popBrowse" style={{ display:"flex", position: "fixed", zIndex: 100 }}>
           <div className="pop-browse__container">
             <div className="pop-browse__block">
               <div className="pop-browse__content">
                 <div className="pop-browse__top-block">
-                  <h3 className="pop-browse__ttl">Название задачи</h3>
-                  <div className="categories__theme theme-top _orange _active-category">
-                    <p className="_orange">Web Design</p>
-                  </div>
+                  <h3 className="pop-browse__ttl">{card.title}</h3>
+                  <div className={`categories__theme theme-top ${card.themeClass || '_orange'} _active-category`}>
+                <p className={card.themeClass || '_orange'}>{card.themeText || 'Web Design'}</p>
+              </div>
                 </div>
                 <div className="pop-browse__status status">
                   <p className="status__p subttl">Статус</p>
@@ -39,13 +40,13 @@ const PopBrowse = () => {
                 </div>
                 <div className="pop-browse__wrap">
                   
-                  <PopBrowseForm />
+                  <PopBrowseForm card={card} />
                   <PopNewCardCalendar />
                   
                 </div>
                
                 <ThemeDomCategories />
-                <PopBrowseBtn />
+                <PopBrowseBtn onClose={onClose}/>
                 
               </div>
             </div>

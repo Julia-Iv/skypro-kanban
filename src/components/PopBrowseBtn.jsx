@@ -1,11 +1,11 @@
 import PopBrowseBtnBrowse from "./PopBrowseBtnBrowse";
 import PopBrowseBtnExit from "./PopBrowseBtnEdit";
 
-const PopBrowseBtn = () => {
+const PopBrowseBtn = ( { onClose }) => {
 
     return (
       <div>
-                <PopBrowseBtnBrowse />
+                <PopBrowseBtnBrowse  onClose={onClose}/>
                 <PopBrowseBtnExit />
                 </div>
     )

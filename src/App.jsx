@@ -9,6 +9,7 @@ import { cardsData } from "./data.js";
 function App() {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedCard, setSelectCard] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,7 +22,9 @@ function App() {
   return (
     <div className="wrapper" style={appStyles}>
       <PopNewCard />
-      <PopBrowse />
+      {selectedCard && (
+        <PopBrowse card={selectedCard} onClose={() => setSelectCard(null)} />
+      )}
       {isLoading ? (
         <div style={loaderStyles}>
           <h2>Данные загружаются...</h2>
@@ -29,7 +32,16 @@ function App() {
       ) : (
         <>
           <Header />
-          <Main cards={cards} />
+          <Main
+            cards={cards}
+            onCardClick={(task) => {
+              console.log(
+                "3. App.jsx получил задачу и записывает в стейт:",
+                task,
+              );
+              setSelectCard(task);
+            }}
+          />
         </>
       )}
     </div>
@@ -55,4 +67,3 @@ const contentStyles = {
 };
 
 export default App;
-//стилизация
