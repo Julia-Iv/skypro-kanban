@@ -11,21 +11,25 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
 
 *:before,
 *:after {
     box-sizing: border-box;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
 
 a,
 a:visited {
     text-decoration: none;
     cursor: pointer;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
 
 button,
 ._btn {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
     cursor: pointer;
     outline: none;
 }
@@ -486,10 +490,15 @@ body {
     padding: 0 7px;
 }
 */
+
+
+
+
 .nav__actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-size: 10px;
 }
 .nav__action {
     width: 18px;
@@ -498,6 +507,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 10px;
 }
 .nav__action svg {
     fill: #94A6BE;
