@@ -12,20 +12,56 @@ import CalendarPeriod from "./CalendarPeriod";
 
 const Calendar = () => {
   return (
-    <CalendarContainer>
+    <CalendarContainer
+      style={{ fontFamily: '"Roboto", Arial, Helvetica, sans-serif' }}
+    >
       <CalendarTitle>
-        <p>Даты</p>
+        <p style={{ fontFamily: '"Roboto", Arial, Helvetica, sans-serif' }}>
+          Даты
+        </p>
       </CalendarTitle>
       <CalendarBlock>
-        <CalendarNav>
-          <CalendarMoth>Сентябрь 2023</CalendarMoth>
-          <div className="nav__actions">
-            <div className="nav__action" data-action="prev">
+        <CalendarNav
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            marginBottom: "14px",
+            marginTop: "0px",
+          }}
+        >
+          <CalendarMoth
+            style={{
+              fontFamily: '"Roboto", Arial, Helvetica, sans-serif',
+              fontWeight: 600,
+              color: "#94a6be",
+              fontSize: "14px",
+              margin: 0,
+              whiteSpace: "nowrap",
+            }}
+          >
+            Сентябрь 2023
+          </CalendarMoth>
+          <div
+            className="nav__actions"
+            style={{ display: "flex", alignItems: "center", gap: "12px" }}
+          >
+            <div
+              className="nav__action"
+              data-action="prev"
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="6"
                 height="11"
                 viewBox="0 0 6 11"
+                style={{ fill: "#94a6be" }}
               >
                 <path d="M5.72945 1.95273C6.09018 1.62041 6.09018 1.0833 5.72945 0.750969C5.36622 0.416344 4.7754 0.416344 4.41218 0.750969L0.528487 4.32883C-0.176162 4.97799 -0.176162 6.02201 0.528487 6.67117L4.41217 10.249C4.7754 10.5837 5.36622 10.5837 5.72945 10.249C6.09018 9.9167 6.09018 9.37959 5.72945 9.04727L1.87897 5.5L5.72945 1.95273Z" />
               </svg>
@@ -44,7 +80,7 @@ const Calendar = () => {
         </CalendarNav>
         <CalendarContent />
         <input type="hidden" id="datepick_value" value="08.09.2023" />
-        <CalendarPeriod/>
+        <CalendarPeriod />
       </CalendarBlock>
     </CalendarContainer>
   );

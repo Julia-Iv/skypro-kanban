@@ -492,13 +492,13 @@ body {
 */
 
 
-
+/*
 
 .nav__actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 10px;
+gap: 12px;
 }
 .nav__action {
     width: 18px;
@@ -507,12 +507,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
 }
 .nav__action svg {
     fill: #94A6BE;
 }
-
+*/
 ._other-month {
     opacity: 0;
 }
