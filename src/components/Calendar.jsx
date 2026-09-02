@@ -33,13 +33,14 @@ const Calendar = () => {
         >
           <CalendarMoth
             style={{
-              fontFamily: '"Roboto", Arial, Helvetica, sans-serif',
-              fontWeight: 600,
-              color: "#94a6be",
-              fontSize: "14px",
-              margin: 0,
+              fontFamily: 'Roboto, Arial, Helvetica, sans-serif',
+               fontWeight: 600,
+               color: " rgb(148, 166, 190)",
+                fontSize: "14px", 
+              margin: 0 , 
               whiteSpace: "nowrap",
-            }}
+              
+              }}
           >
             Сентябрь 2023
           </CalendarMoth>

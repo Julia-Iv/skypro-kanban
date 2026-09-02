@@ -93,6 +93,7 @@ export const CalendarNav = styled.div`
   flex-direction: row !important; /* Жестко выстраиваем в ряд */
   align-items: center !important;
   justify-content: space-between !important; /* Разносим Сентябрь и стрелочки по бокам */
+  width: 100%;
   margin-top: 14px !important;
   margin-bottom: 14px !important;
   padding: 0 7px !important; &,
