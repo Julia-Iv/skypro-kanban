@@ -436,13 +436,14 @@ body {
 }
 .calendar__block {
     display: block;
-}
+}*/
 .calendar__month {
     color: #94A6BE;
     font-size: 14px;
     line-height: 25px;
     font-weight: 600;
 }
+    /*
 .calendar__content {
     margin-bottom: 12px;
 }
@@ -481,7 +482,7 @@ body {
     line-height: 1;
     letter-spacing: -0.2px;
     cursor: pointer;
-}
+}*/
 .calendar__nav {
     width: 100%;
     display: flex;
@@ -489,7 +490,7 @@ body {
     justify-content: space-between;
     margin-top: 14px;
     padding: 0 7px;
-}
+}/*
 .calendar__period {
     padding: 0 7px;
 }
