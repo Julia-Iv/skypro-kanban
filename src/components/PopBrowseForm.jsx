@@ -1,4 +1,4 @@
-const PopBrowseForm = () => {
+const PopBrowseForm = ({ card }) => {
 
     return (
         <form
@@ -14,7 +14,8 @@ const PopBrowseForm = () => {
                         className="form-browse__area"
                         name="text"
                         id="textArea01"
-                        readonly
+                        readOnly
+                        value={card?.description || "Нет описания задачи..."}
                         placeholder="Введите описание задачи..."
                       ></textarea>
                     </div>

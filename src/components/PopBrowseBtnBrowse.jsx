@@ -1,4 +1,4 @@
-const PopBrowseBtnBrowse = () => {
+const PopBrowseBtnBrowse = ({ onClose }) => {
 
     return (
 <div className="pop-browse__btn-browse ">
@@ -10,8 +10,8 @@ const PopBrowseBtnBrowse = () => {
                       <a href="#">Удалить задачу</a>
                     </button>
                   </div>
-                  <button className="btn-browse__close _btn-bg _hover01">
-                    <a href="#">Закрыть</a>
+                  <button className="btn-browse__close _btn-bg _hover01" type="button" onClick={onClose}>
+                    Закрыть
                   </button>
                 </div>
     )

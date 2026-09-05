@@ -1,24 +1,29 @@
-import Card from './Card';
+import React from "react";
+import Card from "./Card";
+import { MainColumn } from "./Main.styled";
 
-const Column = ({ title, tasks }) => {
+const Column = ({ title, tasks, onCardClick }) => {
   return (
-    <div className="main__column column">
+    <MainColumn>
       <div className="column__title">
         <p>{title}</p>
       </div>
-      
+
       <div className="cards">
-        {tasks.map((task) => (
+        {tasks?.map((task) => (
           <Card
             key={task.id}
             themeClass={task.themeClass}
             themeText={task.themeText}
             title={task.title}
             date={task.date}
-          />
+            onClickCard={() => 
+              onCardClick(task)} />
+            
+          
         ))}
       </div>
-    </div>
+    </MainColumn>
   );
 };
 

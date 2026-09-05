@@ -1,39 +1,48 @@
 import { useState } from "react";
+import PopExit from "./PopExit";
+import {
+  StyledHeader,
+  HeaderBlock,
+  HeaderLogo,
+  HeaderNav,
+  CreateTaskLink,
+  HeaderUser,
+} from "./Header.styled";
 
 const Header = () => {
   //управление видимостью модалки
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPopExitOpen, setIsPopExitOpen] = useState(false);
   //переключение состояния открыть-закрыть
   const toggleMenu = (e) => {
     setIsMenuOpen((prev) => !prev);
   };
+  const handleLogout = () => {
+    console.log("Выход из аккаунта");
+    setIsPopExitOpen(false);
+  }
 
   return (
-    <header className="header">
+    <StyledHeader>
       <div className="container">
-        <div className="header__block">
-          <div className="header__logo _show _light">
-            <a href="" target="_self">
+        <HeaderBlock>
+          <HeaderLogo>
+            <a href="#" target="_self">
               <img src="./public/logo.png" alt="logo" />
             </a>
-          </div>
-          <div className="header__logo _dark">
-            <a href="" target="_self">
-              <img src="./public/logo_dark.png" alt="logo" />
-            </a>
-          </div>
-          <nav className="header__nav" style={{ position: "relative" }}>
-            <button className="header__btn-main-new _hover01" id="btnMainNew">
-              <a href="#popNewCard">Создать новую задачу</a>
-            </button>
+          </HeaderLogo>
 
-            <div
-              className="header__user _hover02"
+          <HeaderNav>
+            <CreateTaskLink href="#popNewCard">
+              Создать новую задачу
+            </CreateTaskLink>
+
+            <HeaderUser
+              data-open={isMenuOpen ? "true" : "false"}
               onClick={toggleMenu}
-              style={{ cursor: "pointer", userSelect: "none" }}
             >
               Ivan Ivanov
-            </div>
+            </HeaderUser>
 
             {isMenuOpen && (
               <div
@@ -46,15 +55,24 @@ const Header = () => {
                   <p>Темная тема</p>
                   <input type="checkbox" className="checkbox" name="checkbox" />
                 </div>
-                <button type="button" className="_hover03">
-                  <a href="#popExit">Выйти</a>
+                <button type="button" className="_hover03"
+                onClick={() => {
+                  setIsPopExitOpen(true);
+                  setIsMenuOpen(false);
+                }}> Выйти
                 </button>
               </div>
             )}
-          </nav>
-        </div>
+          </HeaderNav>
+        </HeaderBlock>
       </div>
-    </header>
+      {isPopExitOpen && (
+        <PopExit 
+          onClose={() => setIsPopExitOpen(false)} 
+          onConfirm={handleLogout}
+        />
+      )}
+    </StyledHeader>
   );
 };
 export default Header;

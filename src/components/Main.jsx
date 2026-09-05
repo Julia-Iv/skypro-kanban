@@ -1,6 +1,13 @@
+import { useState } from "react";
+import {
+  StyledMain,
+  MainBlock,
+  MainContent,
+} from "./Main.styled";
+
 import Column from "./column";
 
-const Main = () => {
+const Main = ( { onCardClick }) => {
   // Общий массив задач для доски
   const tasksNoStatus = [
     {
@@ -30,20 +37,21 @@ const Main = () => {
   ];
 
   return (
-    <main className="main">
+    <StyledMain>
       <div className="container">
-        <div className="main__block">
-          <div className="main__content">
+        <MainBlock>
+          <MainContent>
             {/* Рендерим колонки и передаем в них соответствующие массивы Card */}
-            <Column title="Без статуса" tasks={tasksNoStatus} />
-            <Column title="Нужно сделать" tasks={tasksNoStatus} />
-            <Column title="В работе" tasks={tasksInWork} />
-            <Column title="Тестирование" tasks={tasksNoStatus} />
-            <Column title="Готово" tasks={tasksNoStatus} />
-          </div>
-        </div>
+           
+            <Column title="Без статуса" tasks={tasksNoStatus} onCardClick={onCardClick} />
+            <Column title="Нужно сделать" tasks={tasksNoStatus} onCardClick={onCardClick}/>
+            <Column title="В работе" tasks={tasksInWork} onCardClick={onCardClick}/>
+            <Column title="Тестирование" tasks={tasksNoStatus} onCardClick={onCardClick}/>
+            <Column title="Готово" tasks={tasksNoStatus} onCardClick={onCardClick}/>
+          </MainContent>
+        </MainBlock>
       </div>
-    </main>
+    </StyledMain>
   );
 };
 
