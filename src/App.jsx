@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Main from "./components/Main.jsx";
 import PopNewCard from "./components/PopNewCard";
 import PopBrowse from "./components/PopBrowse";
+import AddTaskPage from "./pages/AddTaskPage.jsx";
+import TaskPage from "./pages/TaskPage.jsx";
 import { cardsData } from "./data.js";
 
 function App() {
@@ -21,7 +24,6 @@ function App() {
 
   return (
     <div className="wrapper" style={appStyles}>
-      <PopNewCard />
       {selectedCard && (
         <PopBrowse card={selectedCard} onClose={() => setSelectCard(null)} />
       )}
@@ -30,19 +32,50 @@ function App() {
           <h2>Данные загружаются...</h2>
         </div>
       ) : (
-        <>
-          <Header />
-          <Main
-            cards={cards}
-            onCardClick={(task) => {
-              console.log(
-                "3. App.jsx получил задачу и записывает в стейт:",
-                task,
-              );
-              setSelectCard(task);
-            }}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Header />
+                <Main
+                  cards={cards}
+                  onCardClick={(task) => {
+                    console.log(
+                      "3. App.jsx получил задачу и записывает в стейт:",
+                      task,
+                    );
+
+                    setSelectCard(task);
+                  }}
+                />
+              </>
+            }
           />
-        </>
+          <Route
+            path="/add-task"
+            element={
+              <>
+                <Header />
+                <Main
+                  cards={cards}
+                  onCardClick={(task) => setSelectCard(task)}
+                />
+                <PopNewCard />
+              </>
+            }
+          />
+
+          <Route
+            path="/task/:id"
+            element={
+              <>
+                <Header />
+                <TaskPage />
+              </>
+            }
+          />
+        </Routes>
       )}
     </div>
   );
