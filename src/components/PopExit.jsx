@@ -25,7 +25,7 @@ const PopExit = ({ onConfirm }) => {
             <PopExitYes id="exitYes" onClick={onConfirm} type="button">
               Да, выйти
             </PopExitYes>
-            <PopExitNo id="exitNo" onClick={handleCansel} type="button">
+            <PopExitNo id="exitNo" onClick={handleCancel} type="button">
               Нет, остаться
             </PopExitNo>
           </PopExitFormGroup>

@@ -1,8 +1,10 @@
 import React from "react";
 
-const NotFoundPages = () => (
-  <div>
-    <h4> 404 - Страница не найдена</h4>
-  </div>
-);
-export default NotFoundPages;
+const NotFoundPage = () => {
+  return (
+    <div>
+      <h1> 404 - Страница не найдена</h1>
+    </div>
+  );
+};
+export default NotFoundPage;

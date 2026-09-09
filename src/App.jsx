@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Main from "./components/Main.jsx";
 import PopNewCard from "./components/PopNewCard";
-import PopExit from"./components/PopExit"
+import PopExit from "./components/PopExit";
 //import PopBrowse from "./components/PopBrowse";
 import TaskPage from "./pages/TaskPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
 import { cardsData } from "./data.js";
 
 function App() {
@@ -36,15 +39,21 @@ function App() {
               <>
                 <Header />
                 <Main cards={cards} />
+                <Outlet />
               </>
             }
-          />
-          <Route path="task/:id" element={<TaskPage cards={cards} />} />
-          <Route path="add-task" element={<PopNewCard />} />
-          <Route
-            path="exit"
-            element={<PopExit onConfirm={() => console.log("Выход")} />}
-          />
+          >
+            <Route
+              path="exit"
+              element={<PopExit onConfirm={() => console.log("Выход")} />}
+            />
+            <Route path="add-task" element={<PopNewCard />} />
+
+            <Route path="task/:id" element={<TaskPage cards={cards} />} />
+          </Route>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       )}
     </div>
