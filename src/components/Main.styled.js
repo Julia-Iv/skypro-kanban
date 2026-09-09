@@ -16,10 +16,11 @@ export const MainBlock = styled.div`
 export const MainContent = styled.div`
   width: 100%;
   display: flex;
+  
 
   @media screen and (max-width: 1200px) {
     display: block;
-  }
+      }
 `;
 export const MainColumn = styled.div`
   width: 20%;

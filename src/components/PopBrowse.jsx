@@ -8,8 +8,24 @@ const PopBrowse = ({card, onClose}) => {
 
     return (
 
-<div className="pop-browse" id="popBrowse" style={{ display:"flex", position: "fixed", zIndex: 100 }}>
-          <div className="pop-browse__container">
+<div className="pop-browse" id="popBrowse" 
+style={{ 
+        display: "flex", 
+        position: "fixed", 
+        top: 0, 
+        left: 0, 
+        width: "100vw", 
+        height: "100vh", 
+        backgroundColor: "rgba(0, 0, 0, 0.5)", // Заемнение заднего фона доски
+        alignItems: "center", 
+        justifyContent: "center", 
+        zIndex: 1500 // Самый высокий z-index, чтобы перекрыть шапку и карточки
+      }}
+      onClick={onClose} // Закрыть при клике на темную область вокруг окна
+    
+//style={{ display:"flex", position: "fixed", zIndex: 100 }}
+>
+          <div className="pop-browse__container" onClick={(e) => e.stopPropagation()}>
             <div className="pop-browse__block">
               <div className="pop-browse__content">
                 <div className="pop-browse__top-block">

@@ -5,14 +5,13 @@ import Header from "./components/Header";
 import Main from "./components/Main.jsx";
 import PopNewCard from "./components/PopNewCard";
 import PopBrowse from "./components/PopBrowse";
-import AddTaskPage from "./pages/AddTaskPage.jsx";
 import TaskPage from "./pages/TaskPage.jsx";
 import { cardsData } from "./data.js";
 
 function App() {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedCard, setSelectCard] = useState(null);
+ //const [selectedCard, setSelectCard] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,9 +23,6 @@ function App() {
 
   return (
     <div className="wrapper" style={appStyles}>
-      {selectedCard && (
-        <PopBrowse card={selectedCard} onClose={() => setSelectCard(null)} />
-      )}
       {isLoading ? (
         <div style={loaderStyles}>
           <h2>Данные загружаются...</h2>
@@ -38,43 +34,12 @@ function App() {
             element={
               <>
                 <Header />
-                <Main
-                  cards={cards}
-                  onCardClick={(task) => {
-                    console.log(
-                      "3. App.jsx получил задачу и записывает в стейт:",
-                      task,
-                    );
-
-                    setSelectCard(task);
-                  }}
-                />
+                <Main cards={cards} />
               </>
             }
           />
-          <Route
-            path="/add-task"
-            element={
-              <>
-                <Header />
-                <Main
-                  cards={cards}
-                  onCardClick={(task) => setSelectCard(task)}
-                />
-                <PopNewCard />
-              </>
-            }
-          />
-
-          <Route
-            path="/task/:id"
-            element={
-              <>
-                <Header />
-                <TaskPage />
-              </>
-            }
-          />
+          <Route path="task/:id" element={<TaskPage cards={cards} />} />
+          <Route path="add-task" element={<PopNewCard />} />
         </Routes>
       )}
     </div>
