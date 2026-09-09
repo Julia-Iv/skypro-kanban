@@ -13,7 +13,7 @@ import {
 const Header = () => {
   //управление видимостью меню и модалки
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isPopExitOpen, setIsPopExitOpen] = useState(false);
+ // const [isPopExitOpen, setIsPopExitOpen] = useState(false);
   //переключение состояния открыть-закрыть
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -57,26 +57,20 @@ const Header = () => {
                   <input type="checkbox" className="checkbox" name="checkbox" />
                 </div>
 
-                <button type="button" className="_hover03"
-                  onClick=
-                  {() => {
-                    setIsPopExitOpen(true);
-                    setIsMenuOpen(false);
-                  }}
-                  >
+                <Link 
+                  to="/exit" 
+                  className="_hover03"
+                  style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
+                  onClick={() => setIsMenuOpen(false)} // Закрываем маленькое меню при клике
+                >
                   Выйти
-                </button>
+                </Link>
               </div>
             )}
           </HeaderNav>
         </HeaderBlock>
       </div>
-      {isPopExitOpen && (
-        <PopExit
-          onClose={() => setIsPopExitOpen(false)}
-          onConfirm={handleLogout}
-        />
-      )}
+      
     </StyledHeader>
   );
 };

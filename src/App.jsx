@@ -4,14 +4,15 @@ import "./App.css";
 import Header from "./components/Header";
 import Main from "./components/Main.jsx";
 import PopNewCard from "./components/PopNewCard";
-import PopBrowse from "./components/PopBrowse";
+import PopExit from"./components/PopExit"
+//import PopBrowse from "./components/PopBrowse";
 import TaskPage from "./pages/TaskPage.jsx";
 import { cardsData } from "./data.js";
 
 function App() {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
- //const [selectedCard, setSelectCard] = useState(null);
+  //const [selectedCard, setSelectCard] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -40,6 +41,10 @@ function App() {
           />
           <Route path="task/:id" element={<TaskPage cards={cards} />} />
           <Route path="add-task" element={<PopNewCard />} />
+          <Route
+            path="exit"
+            element={<PopExit onConfirm={() => console.log("Выход")} />}
+          />
         </Routes>
       )}
     </div>
