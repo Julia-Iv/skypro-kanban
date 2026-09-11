@@ -1,15 +1,50 @@
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom";
 import PopNewCardForm from "./PopNewCardForm";
 import Calendar from "./Calendar";
 import PopNewCardCategories from "./PopNewCardCategories";
 import FormNewCreate from "./FormNewCreate";
+import { api } from "../api"
 
-const PopNewCard = () => {
+const PopNewCard = ( { setCards }) => {
   const navigate = useNavigate();
+  // Создаем общее состояние для полей новой задачи
+  const [taskData, setTaskData] = useState({
+    title: "",
+    description: "",
+    status: "Без статуса", // или первая колонка по умолчанию
+    category: "",
+    date: new Date(),
+  });
+
   const handleClose = (e) => {
     e?.preventDefault();
     navigate("/");
   };
+// 3. Функция обработки отправки формы на бэкенд
+  const handleCreateTask = async (e) => {
+    e?.preventDefault();
+
+    // Валидация: проверяем, что название задачи заполнено
+    if (!taskData.title.trim()) {
+      alert("Пожалуйста, введите название задачи");
+      return;
+    }
+
+    try {
+      // Отправляем запрос на создание задачи к серверу
+      const newCardFromServer = await api.createTask(taskData);
+      
+      // Добавляем новую карточку, пришедшую от сервера, в глобальный стейт приложения
+      setCards((prevCards) => [...prevCards, newCardFromServer]);
+   // Возвращаемся на главную страницу (закрываем модальное окно)
+      navigate("/");
+    } catch (error) {
+      console.error("Ошибка при создании задачи:", error);
+      alert("Не удалось создать задачу. Попробуйте еще раз.");
+    }
+  };
+
   return (
     <div
       className="pop-new-card"
@@ -21,7 +56,7 @@ const PopNewCard = () => {
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: "rgba(0, 0, 0, 0.5)", // Затемнение заднего фона доски
+        backgroundColor: "rgba(0, 0, 0, 0.2)", // Затемнение заднего фона доски
         alignItems: "center",
         justifyContent: "center",
         zIndex: 1500,
@@ -37,13 +72,15 @@ const PopNewCard = () => {
             <Link to="/" className="pop-new-card__close">
               ✖
             </Link>
+            <form onSubmit={handleCreateTask}> 
 
             <div className="pop-new-card__wrap">
-              <PopNewCardForm />
-              <Calendar />
+              <PopNewCardForm taskData={taskData} setTaskData={setTaskData} />
+              <Calendar taskData={taskData} setTaskData={setTaskData} />
             </div>
-            <PopNewCardCategories />
+            <PopNewCardCategories taskData={taskData} setTaskData={setTaskData} />
             <FormNewCreate onCancel={handleClose} />
+            </form>
           </div>
         </div>
       </div>

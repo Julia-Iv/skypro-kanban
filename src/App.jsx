@@ -11,12 +11,30 @@ import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import { cardsData } from "./data.js";
+import { api } from "./api";
 
 function App() {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   //const [selectedCard, setSelectCard] = useState(null);
 
+  useEffect(() => {
+    setIsLoading(true);
+    api.getTasks()
+      .then((data) => {
+        setCards(data);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("Не удалось загрузить задачи:", err);
+        setError("Ошибка загрузки данных. Пожалуйста, попробуйте позже.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+/*
   useEffect(() => {
     const timer = setTimeout(() => {
       setCards(cardsData);
@@ -24,12 +42,16 @@ function App() {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
-
+*/
   return (
     <div className="wrapper" style={appStyles}>
       {isLoading ? (
         <div style={loaderStyles}>
           <h2>Данные загружаются...</h2>
+        </div>
+        ) : error ? ( // Обработка сценария ошибки на сервере
+        <div style={loaderStyles}>
+          <h2 style={{ color: "#ef5656" }}>{error}</h2>
         </div>
       ) : (
         <Routes>
@@ -47,9 +69,9 @@ function App() {
               path="exit"
               element={<PopExit onConfirm={() => console.log("Выход")} />}
             />
-            <Route path="add-task" element={<PopNewCard />} />
+            <Route path="add-task" element={<PopNewCard setCards={setCards} />} />
 
-            <Route path="task/:id" element={<TaskPage cards={cards} />} />
+            <Route path="task/:id" element={<TaskPage cards={cards} setCards={setCards} />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -79,4 +101,3 @@ const contentStyles = {
 };
 
 export default App;
-//работа с API
