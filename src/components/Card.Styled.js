@@ -54,7 +54,7 @@ const themeStyles = {
   _orange: { bg: "#FFE4C2", color: "#FF6D00" },
   _green: { bg: "#B4FDD1", color: "#06B16E" },
   _purple: { bg: "#E9D4FF", color: "#9A48F1" },
-  _gray: { bg: "#94A6BE", color: "#FFFFFF" },
+  default: { bg: "#94A6BE", color: "#FFFFFF" },
 };
 
 export const CardTheme = styled.div`
@@ -66,16 +66,17 @@ export const CardTheme = styled.div`
   align-items: center;
   justify-content: center;
 
-  background-color: ${(props) =>
-    themeStyles[props.$theme] ? themeStyles[props.$theme].bg : "#FFE4C4"};
+  background-color: ${(props) => (themeStyles[props.$theme] || themeStyles.default).bg};
+  color: ${(props) => (themeStyles[props.$theme] || themeStyles.default).color};
 
   p {
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     font-size: 10px;
     font-weight: 600;
     line-height: 10px;
-    color: ${(props) =>
-      themeStyles[props.$theme] ? themeStyles[props.$theme].color : "#FF6D00"};
+    
+    color: inherit; 
+    
   }
 `;
 
@@ -121,7 +122,6 @@ export const CardDate = styled.div`
   svg {
     width: 13px;
     height: 13px;
-    
   }
   p {
     margin-left: 6px;
@@ -129,7 +129,7 @@ export const CardDate = styled.div`
     font-size: 10px; /* Размер шрифта по макету */
     font-weight: 400; /* Начертание (Regular). Если нужно жирнее, поставьте 500 или 600 */
     line-height: 13px; /* Высота строки для аккуратного выравнивания */
-    color: #94A6BE; /* Фирменный серый цвет из вашего CSS */
+    color: #94a6be; /* Фирменный серый цвет из вашего CSS */
     letter-spacing: 0.2px; /* Межзнаковый интервал */
   }
 `;

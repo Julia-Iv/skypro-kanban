@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import PopExit from "./PopExit";
 import {
   StyledHeader,
@@ -10,30 +11,30 @@ import {
 } from "./Header.styled";
 
 const Header = () => {
-  //управление видимостью модалки
+  //управление видимостью меню и модалки
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isPopExitOpen, setIsPopExitOpen] = useState(false);
+ // const [isPopExitOpen, setIsPopExitOpen] = useState(false);
   //переключение состояния открыть-закрыть
-  const toggleMenu = (e) => {
+  const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
   const handleLogout = () => {
     console.log("Выход из аккаунта");
     setIsPopExitOpen(false);
-  }
+  };
 
   return (
     <StyledHeader>
       <div className="container">
         <HeaderBlock>
           <HeaderLogo>
-            <a href="#" target="_self">
+            <Link to="/">
               <img src="./public/logo.png" alt="logo" />
-            </a>
+            </Link>
           </HeaderLogo>
 
           <HeaderNav>
-            <CreateTaskLink href="#popNewCard">
+            <CreateTaskLink as={Link} to="/add-task">
               Создать новую задачу
             </CreateTaskLink>
 
@@ -55,23 +56,21 @@ const Header = () => {
                   <p>Темная тема</p>
                   <input type="checkbox" className="checkbox" name="checkbox" />
                 </div>
-                <button type="button" className="_hover03"
-                onClick={() => {
-                  setIsPopExitOpen(true);
-                  setIsMenuOpen(false);
-                }}> Выйти
-                </button>
+
+                <Link 
+                  to="/exit" 
+                  className="_hover03"
+                  style={{ textDecoration: 'none', display: 'block', textAlign: 'center' }}
+                  onClick={() => setIsMenuOpen(false)} // Закрываем маленькое меню при клике
+                >
+                  Выйти
+                </Link>
               </div>
             )}
           </HeaderNav>
         </HeaderBlock>
       </div>
-      {isPopExitOpen && (
-        <PopExit 
-          onClose={() => setIsPopExitOpen(false)} 
-          onConfirm={handleLogout}
-        />
-      )}
+      
     </StyledHeader>
   );
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   PopExitContainer,
   PopExitBlock,
@@ -8,22 +9,23 @@ import {
   PopExitNo,
 } from "./PopExit.styled";
 
-const PopExit = ({ onClose, onConfirm }) => {
-  const handleCansel = (e) => {
+const PopExit = ({ onConfirm }) => {
+  const navigate = useNavigate();
+  const handleCancel = (e) => {
     e.preventDefault();
-    onClose(); //вызываем функцию закрытия модалки
+    navigate("/"); //вызываем функцию закрытия модалки
   };
 
   return (
-    <PopExitContainer id="popExit">
-      <PopExitBlock>
+    <PopExitContainer id="popExit" onClick={handleCancel}>
+      <PopExitBlock onClick={(e) => e.stopPropagation()}>
         <PopExitTitle>Выйти из аккаунта?</PopExitTitle>
         <form className="pop-exit__form" id="formExit" action="#">
           <PopExitFormGroup>
             <PopExitYes id="exitYes" onClick={onConfirm} type="button">
               Да, выйти
             </PopExitYes>
-            <PopExitNo id="exitNo" onClick={handleCansel} type="button">
+            <PopExitNo id="exitNo" onClick={handleCancel} type="button">
               Нет, остаться
             </PopExitNo>
           </PopExitFormGroup>

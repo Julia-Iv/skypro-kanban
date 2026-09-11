@@ -1,15 +1,21 @@
 import { useState, useEffect } from "react";
+import { Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Main from "./components/Main.jsx";
 import PopNewCard from "./components/PopNewCard";
-import PopBrowse from "./components/PopBrowse";
+import PopExit from "./components/PopExit";
+//import PopBrowse from "./components/PopBrowse";
+import TaskPage from "./pages/TaskPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
 import { cardsData } from "./data.js";
 
 function App() {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedCard, setSelectCard] = useState(null);
+  //const [selectedCard, setSelectCard] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,28 +27,34 @@ function App() {
 
   return (
     <div className="wrapper" style={appStyles}>
-      <PopNewCard />
-      {selectedCard && (
-        <PopBrowse card={selectedCard} onClose={() => setSelectCard(null)} />
-      )}
       {isLoading ? (
         <div style={loaderStyles}>
           <h2>Данные загружаются...</h2>
         </div>
       ) : (
-        <>
-          <Header />
-          <Main
-            cards={cards}
-            onCardClick={(task) => {
-              console.log(
-                "3. App.jsx получил задачу и записывает в стейт:",
-                task,
-              );
-              setSelectCard(task);
-            }}
-          />
-        </>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Header />
+                <Main cards={cards} />
+                <Outlet />
+              </>
+            }
+          >
+            <Route
+              path="exit"
+              element={<PopExit onConfirm={() => console.log("Выход")} />}
+            />
+            <Route path="add-task" element={<PopNewCard />} />
+
+            <Route path="task/:id" element={<TaskPage cards={cards} />} />
+          </Route>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       )}
     </div>
   );
