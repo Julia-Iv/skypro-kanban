@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import PopBrowse from "../components/PopBrowse";
 import { api } from "../api";
 
-const TaskPage = ({ cards, setCards }) => {
+const TaskPage = ({ cards, setCards, token }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   // Находим нужную задачу в массиве данных по id
@@ -19,12 +19,10 @@ const TaskPage = ({ cards, setCards }) => {
 
     try {
       // Отправляем запрос на удаление к бэкенду
-      await api.deleteTask(id);
+      const data = await api.deleteTask(id, token);
 
       // Обновляем локальный стейт приложения (исключаем удаленную карточку)
-      setCards((prevCards) =>
-        prevCards.filter((card) => String(card.id) !== String(id)),
-      );
+      setCards(data.tasks);
 
       // Возвращаемся на главную
       navigate("/");
@@ -37,14 +35,11 @@ const TaskPage = ({ cards, setCards }) => {
   const handleUpdateTask = async (updatedFields) => {
     try {
       // Отправляем измененные поля на бэкенд
-      const updatedCardFromServer = await api.updateTask(id, updatedFields);
+      const data = await api.updateTask(id, updatedFields, token);
 
       // Обновляем локальный стейт приложения
-      setCards((prevCards) =>
-        prevCards.map((card) =>
-          String(card.id) === String(id) ? updatedCardFromServer : card,
-        ),
-      );
+      setCards(data.tasks);
+      navigate("/")
     } catch (error) {
       console.error("Ошибка при обновлении задачи:", error);
       alert("Не удалось сохранить изменения.");

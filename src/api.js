@@ -1,81 +1,73 @@
 import axios from 'axios'
 
-const API_URL = 'https://wedev-api.sky.pro/api/user';
-// Вспомогательная функция для обработки ответов
-async function handleResponse(response) {
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || `Ошибка сервера: ${response.status}`);
-  }
-  if (response.status === 204) return null;
-  return response.json();
-}
-
-// Конфигурация заголовков (если будет авторизация, сюда добавится Token)
-const getHeaders = () => ({
-  "Content-Type": "application/json",
+// Создаем экземпляр Axios для работы с задачами Kanban
+const kanbanApi = axios.create({
+  baseURL: 'https://wedev-api.sky.pro/api/kanban',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
+
+//  Axios для работы с пользователями (Авторизация)
+const userApi = axios.create({
+  baseURL: 'https://wedev-api.sky.pro/api/user',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Вспомогательная функция для динамического добавления токена в заголовки
+const getAuthHeaders = (token) => {
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 export const api = {
   // --- ЗАДАЧИ (CARDS) ---
   
   // Получить все задачи
-   async getTasks() {
-    const res = await fetch(`${BASE_URL}/tasks`, {
-      method: "GET",
-      headers: getHeaders(),
+   async getTasks(token) {
+    const response =await kanbanApi.get('', {
+      headers: getAuthHeaders(token),
     });
-    return handleResponse(res);
+    return response.data; // Axios возвращает результат в поле data
   },
 
   // Создать новую задачу
-  async createTask(taskData) {
-    const res = await fetch(`${BASE_URL}/tasks`, {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(taskData),
+  async createTask(taskData, token) {
+    const response = await kanbanApi.post('', taskData, {
+      headers: getAuthHeaders(token),
     });
-    return handleResponse(res);
+    return response.data;
   },
 
   // Изменить задачу (включая смену статуса/колонки)
-  async updateTask(taskId, taskData) {
-    const res = await fetch(`${BASE_URL}/tasks/${taskId}`, {
-      method: "PATCH",
-            headers: getHeaders(),
-      body: JSON.stringify(taskData),
+  async updateTask(taskId, taskData, token) {
+    const response = await kanbanApi.patch(`/${taskId}`, taskData, {
+      headers: getAuthHeaders(token),
     });
-    return handleResponse(res);
+    return response.data;
   },
 
   // Удалить задачу
-  async deleteTask(taskId) {
-    const res = await fetch(`${BASE_URL}/tasks/${taskId}`, {
-      method: "DELETE",
-      headers: getHeaders(),
+  async deleteTask(taskId, token) {
+    const response = await kanbanApi.delete(`/${taskId}`, {
+      headers: getAuthHeaders(token),
     });
-    return handleResponse(res);
+    return response.data;
   },
 
   // --- АВТОРИЗАЦИЯ ---
     // Вход пользователя
   async login(credentials) {
-    const res = await fetch(`${BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(credentials),
-    });
-    return handleResponse(res);
+    const response = await userApi.post('/login', credentials);
+    return response.data;
   },
 
   // Регистрация пользователя
   async register(userData) {
-    const res = await fetch(`${BASE_URL}/auth/register`, {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(userData),
-    });
-    return handleResponse(res);
+        const response = await userApi.post('', userData);
+    return response.data;
   }
 };
+
 

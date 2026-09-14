@@ -6,7 +6,7 @@ import PopNewCardCategories from "./PopNewCardCategories";
 import FormNewCreate from "./FormNewCreate";
 import { api } from "../api"
 
-const PopNewCard = ( { setCards }) => {
+const PopNewCard = ( { setCards, token }) => {
   const navigate = useNavigate();
   // Создаем общее состояние для полей новой задачи
   const [taskData, setTaskData] = useState({
@@ -33,10 +33,10 @@ const PopNewCard = ( { setCards }) => {
 
     try {
       // Отправляем запрос на создание задачи к серверу
-      const newCardFromServer = await api.createTask(taskData);
+      const data = await api.createTask(taskData, token);
       
       // Добавляем новую карточку, пришедшую от сервера, в глобальный стейт приложения
-      setCards((prevCards) => [...prevCards, newCardFromServer]);
+      setCards(data.tasks);
    // Возвращаемся на главную страницу (закрываем модальное окно)
       navigate("/");
     } catch (error) {
