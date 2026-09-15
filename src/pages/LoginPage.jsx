@@ -123,6 +123,15 @@ const modalStyles = {
   width: "320px",
   boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
 };
+const inputStyles = {
+  width: "100%",
+  padding: "12px",
+  borderRadius: "8px",
+  border: "1px solid #d4dbe5",
+  fontSize: "14px",
+  outline: "none",
+  boxSizing: "border-box", 
+};
 const btnGroupStyles = {
   display: "flex",
   gap: "10px",

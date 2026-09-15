@@ -1,19 +1,13 @@
-import axios from 'axios'
+import axios from "axios";
 
 // Создаем экземпляр Axios для работы с задачами Kanban
 const kanbanApi = axios.create({
-  baseURL: 'https://wedev-api.sky.pro/api/kanban',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: "https://wedev-api.sky.pro/api/kanban",
 });
 
 //  Axios для работы с пользователями (Авторизация)
 const userApi = axios.create({
-  baseURL: 'https://wedev-api.sky.pro/api/user',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: "https://wedev-api.sky.pro/api/user",
 });
 
 // Вспомогательная функция для динамического добавления токена в заголовки
@@ -23,10 +17,10 @@ const getAuthHeaders = (token) => {
 
 export const api = {
   // --- ЗАДАЧИ (CARDS) ---
-  
+
   // Получить все задачи
-   async getTasks(token) {
-    const response =await kanbanApi.get('', {
+  async getTasks(token) {
+    const response = await kanbanApi.get("", {
       headers: getAuthHeaders(token),
     });
     return response.data; // Axios возвращает результат в поле data
@@ -34,7 +28,7 @@ export const api = {
 
   // Создать новую задачу
   async createTask(taskData, token) {
-    const response = await kanbanApi.post('', taskData, {
+    const response = await kanbanApi.post("", taskData, {
       headers: getAuthHeaders(token),
     });
     return response.data;
@@ -57,17 +51,31 @@ export const api = {
   },
 
   // --- АВТОРИЗАЦИЯ ---
-    // Вход пользователя
-  async login(credentials) {
-    const response = await userApi.post('/login', credentials);
+  // Вход пользователя
+  async login({ login, password }) {
+    const response = await userApi.post(
+      "/login",
+      JSON.stringify({ login, password }), // <-- Превращаем в строку
+      {
+        headers: {
+          "Content-Type": "", // <-- Принудительно очищаем заголовок
+        },
+      },
+    );
     return response.data;
   },
 
   // Регистрация пользователя
-  async register(userData) {
-        const response = await userApi.post('', userData);
+  async register({ name, login, password }) {
+    const response = await userApi.post(
+      "",
+      JSON.stringify({ name, login, password }), // <-- Превращаем в строку
+      {
+        headers: {
+          "Content-Type": "", // <-- Принудительно очищаем заголовок
+        },
+      },
+    );
     return response.data;
-  }
+  },
 };
-
-
