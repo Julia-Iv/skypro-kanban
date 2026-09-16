@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import PopBrowseForm from "./PopBrowseForm";
 import PopNewCardCalendar from "./PopNewCardCalendar";
 import ThemeDomCategories from "./ThemeDomCategories";
@@ -8,6 +8,23 @@ const PopBrowse = ({ card, onClose }) => {
   if (!card) return null;
 
   const [isEdit, setIsEdit] = useState(false);
+  // Создаем локальный изменяемый стейт для задачи на основе пропса card,
+  // чтобы можно было редактировать даты и данные без мгновенной перезаписи оригинала
+  const [editedCard, setEditedCard] = useState({ ...card });
+
+  // Сброс изменений при отмене
+  const handleCancel = () => {
+    setEditedCard({ ...card }); // Возвращаем исходное состояние карточки
+    setIsEdit(false);
+  };
+
+  // Функция обновления из верхнего стейта/API)
+  const handleSave = () => {
+    console.log("Сохраненные данные карточки с новыми датами:", editedCard);
+    setIsEdit(false);
+    // Например: onSave(editedCard);
+  };
+
   return (
     <div
       className="pop-browse"
@@ -19,7 +36,7 @@ const PopBrowse = ({ card, onClose }) => {
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: "rgba(0, 0, 0, 0.5)", // Заемнение заднего фона доски
+        backgroundColor: "rgba(0, 0, 0, 0.2)", // Заемнение заднего фона доски
         alignItems: "center",
         justifyContent: "center",
         zIndex: 1500, // Самый высокий z-index, чтобы перекрыть шапку и карточки
@@ -35,12 +52,12 @@ const PopBrowse = ({ card, onClose }) => {
         <div className="pop-browse__block">
           <div className="pop-browse__content">
             <div className="pop-browse__top-block">
-              <h3 className="pop-browse__ttl">{card.title}</h3>
+              <h3 className="pop-browse__ttl">{editedCard.title}</h3>
               <div
-                className={`categories__theme theme-top ${card.themeClass || "_orange"} _active-category`}
+                className={`categories__theme theme-top ${editedCard.themeClass || "_orange"} _active-category`}
               >
-                <p className={card.themeClass || "_orange"}>
-                  {card.themeText || "Web Design"}
+                <p className={editedCard.themeClass || "_orange"}>
+                  {editedCard.themeText || "Web Design"}
                 </p>
               </div>
             </div>
@@ -65,19 +82,32 @@ const PopBrowse = ({ card, onClose }) => {
               </div>
             </div>
             <div className="pop-browse__wrap">
-              <PopBrowseForm card={card} isEdit={isEdit} />
-              <PopNewCardCalendar isEdit={isEdit} />
+              <PopBrowseForm card={editedCard} isEdit={isEdit} />
+              <PopNewCardCalendar
+                taskData={editedCard}
+                setTaskData={setEditedCard}
+                isEdit={isEdit}
+              />
             </div>
 
             {isEdit && <ThemeDomCategories />}
-<div className="pop-browse__btn-browse" style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+            <div
+              className="pop-browse__btn-browse"
+              style={{ display: "flex", gap: "10px", marginTop: "20px" }}
+            >
               {isEdit ? (
                 // Кнопки режима РЕДАКТИРОВАНИЯ (Макет 1)
                 <>
-                  <button className="btn-edit__save" onClick={() => setIsEdit(false)}>
+                  <button
+                    className="btn-edit__save"
+                    onClick={ handleSave }
+                  >
                     Сохранить
                   </button>
-                  <button className="btn-edit__cancel" onClick={() => setIsEdit(false)}>
+                  <button
+                    className="btn-edit__cancel"
+                    onClick={ handleCancel }
+                  >
                     Отменить
                   </button>
                   <button className="btn-edit__delete">Удалить задачу</button>
@@ -85,23 +115,30 @@ const PopBrowse = ({ card, onClose }) => {
               ) : (
                 // Кнопки режима ПРОСМОТРА (Макет 2)
                 <>
-                  {/* При клике переключаем режим на true 👈 */}
-                  <button className="btn-browse__edit" onClick={() => setIsEdit(true)}>
+                  {/* При клике переключаем режим на true  */}
+                  <button
+                    className="btn-browse__edit"
+                    onClick={() => setIsEdit(true)}
+                  >
                     Редактировать задачу
                   </button>
                   <button className="btn-browse__delete">Удалить задачу</button>
-                </>   
-                )}
-              
+                </>
+              )}
+
               {/* Кнопка Закрыть видна всегда */}
-              <button className="btn-browse__close" onClick={onClose} style={{ marginLeft: "auto" }}>
+              <button
+                className="btn-browse__close"
+                onClick={onClose}
+                style={{ marginLeft: "auto" }}
+              >
                 Закрыть
               </button>
             </div>
-                </div>
+          </div>
         </div>
       </div>
-      </div>
+    </div>
   );
 };
 

@@ -13,8 +13,9 @@ import CalendarContent from "./CalendarContent";
 import CalendarPeriod from "./CalendarPeriod";
 
 const Calendar = ({ taskData, setTaskData }) => {
+  const baseDate = taskData.selectedStartDate || taskData.date || new Date();
   // Локальное состояние для навигации по месяцам (по умолчанию текущий месяц из taskData)
-  const [currentMonth, setCurrentMonth] = useState(new Date(taskData.date));
+  const [currentMonth, setCurrentMonth] = useState(new Date(baseDate));
 
   // Список названий месяцев для вывода в шапку
   const monthsRu = [
@@ -47,16 +48,33 @@ const Calendar = ({ taskData, setTaskData }) => {
   };
 
   // Обработчик выбора конкретного числа
-  const handleDateSelect = (day) => {
-    const newSelectedDate = new Date(
-      currentMonth.getFullYear(),
-      currentMonth.getMonth(),
-      day,
-    );
-    setTaskData((prevData) => ({
-      ...prevData,
-      date: newSelectedDate, // Записываем выбранную дату в глобальный стейт
-    }));
+  const handleDateClick = (clickedDate) => {
+    const startDate = taskData?.selectedStartDate;
+    const endDate = taskData?.selectedEndDate;
+
+    setTaskData((prevData) => {
+      // 1. Если еще ничего не выбрано ИЛИ уже выбраны обе даты -> начинаем новый выбор (ставим только старт)
+      if (!startDate || (startDate && endDate)) {
+        return {
+          ...prevData,
+          selectedStartDate: clickedDate,
+          selectedEndDate: null,
+          date: clickedDate, // Для обратной совместимости, если где-то используется старое свойство
+        };
+      }
+      if (clickedDate < startDate) {
+        return {
+          ...prevData,
+          selectedStartDate: clickedDate,
+          selectedEndDate: null,
+          date: clickedDate,
+        };
+      }
+      return {
+        ...prevData,
+        selectedEndDate: clickedDate,
+      };
+    });
   };
 
   return (
@@ -132,11 +150,15 @@ const Calendar = ({ taskData, setTaskData }) => {
           </div>
         </CalendarNav>
         <CalendarContent
-          currentMonth={currentMonth}
-          selectedDate={taskData.date}
-          onDateSelect={handleDateSelect}
+          currentDate={currentMonth}
+          selectedStartDate={taskData?.selectedStartDate}
+          selectedEndDate={taskData?.selectedEndDate}
+          onDateClick={handleDateClick}
         />
-        <CalendarPeriod selectedDate={taskData.date} />
+        <CalendarPeriod
+          selectedStartDate={taskData.selectedStartDate}
+          selectedEndDate={taskData.selectedEndDate}
+        />
       </CalendarBlock>
     </CalendarContainer>
   );
