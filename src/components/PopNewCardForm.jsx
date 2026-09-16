@@ -1,4 +1,6 @@
 const PopNewCardForm = ({ taskData, setTaskData }) => {
+    console.log("Текущее состояние taskData:", taskData);
+
   // обновления полей в общем состоянии родителя
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -9,7 +11,7 @@ const PopNewCardForm = ({ taskData, setTaskData }) => {
   };
 
   return (
-    <div className="pop-new-card__form form-new" id="formNewCard" action="#">
+    <div className="pop-new-card__form form-new" id="formNewCard" onSubmit={(e) => e.preventDefault()}>
       <div className="form-new__block">
         <label htmlFor="formTitle" className="subttl">
           Название задачи
@@ -31,7 +33,7 @@ const PopNewCardForm = ({ taskData, setTaskData }) => {
         </label>
         <textarea
           className="form-new__area"
-          name="text"
+          name="description"
           id="textArea"
           placeholder="Введите описание задачи..."
           value={taskData.description} /* Привязываем значение к стейту */

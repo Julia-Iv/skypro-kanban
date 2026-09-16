@@ -28,17 +28,32 @@ export const api = {
 
   // Создать новую задачу
   async createTask(taskData, token) {
-    const response = await kanbanApi.post("", taskData, {
-      headers: getAuthHeaders(token),
-    });
+    const response = await kanbanApi.post(
+      "",
+      JSON.stringify(taskData), //Превращаем объект в строку, как в методах авторизации
+      {
+        headers: {
+          ...getAuthHeaders(token),
+          "Content-Type": "", // Принудительно очищаем заголовок по требованию API Skypro
+        },
+      },
+    );
     return response.data;
   },
 
   // Изменить задачу (включая смену статуса/колонки)
   async updateTask(taskId, taskData, token) {
-    const response = await kanbanApi.patch(`/${taskId}`, taskData, {
-      headers: getAuthHeaders(token),
-    });
+    const response = await kanbanApi.patch(
+      `/${taskId}`,
+      JSON.stringify(taskData), // 🌟 Также превращаем в строку на будущее
+      {
+        headers: {
+          ...getAuthHeaders(token),
+          "Content-Type": "", // 🌟 Очищаем заголовок
+        },
+      },
+    );
+
     return response.data;
   },
 
