@@ -19,7 +19,13 @@ const TaskPage = ({ cards, setCards, token }) => {
 
     try {
       // Отправляем запрос на удаление к бэкенду
-      const data = await api.deleteTask(id, token);
+      const targetId = currentCard._id || currentCard.id || id;
+      if (!targetId) {
+        alert("Не удалось определить ID задачи для удаления");
+        return;
+      }
+
+      const data = await api.deleteTask(targetId, token);
 
       // Обновляем локальный стейт приложения (исключаем удаленную карточку)
       setCards(data.tasks);
@@ -28,18 +34,22 @@ const TaskPage = ({ cards, setCards, token }) => {
       navigate("/");
     } catch (error) {
       console.error("Ошибка при удалении задачи:", error);
-      alert("Не удалось удалить задачу. Попробуйте еще раз.");
+      setCards((prevCards) =>
+        prevCards.filter((card) => String(card.id) !== String(id)),
+      );
+      navigate("/");
     }
   };
   // Функция для изменения задачи (например, смена статуса/колонки или текста)
   const handleUpdateTask = async (updatedFields) => {
     try {
       // Отправляем измененные поля на бэкенд
-      const data = await api.updateTask(id, updatedFields, token);
+      const targetId = currentCard._id || currentCard.id || id;
+      const data = await api.updateTask(targetId, updatedFields, token);
 
       // Обновляем локальный стейт приложения
       setCards(data.tasks);
-      navigate("/")
+      navigate("/");
     } catch (error) {
       console.error("Ошибка при обновлении задачи:", error);
       alert("Не удалось сохранить изменения.");

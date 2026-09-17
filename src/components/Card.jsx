@@ -45,7 +45,7 @@ const Card = ({ id, themeClass, themeText, title, date, onClickCard }) => {
                 viewBox="0 0 13 13"
                 fill="none"
               >
-                <g clipPath="url(#clip0_1_415)">
+                <g clipPath={'url(#clip0_1_415_${id})'}>
                   <path
                     d="M10.5625 2.03125H2.4375C1.7644 2.03125 1.21875 2.5769 1.21875 3.25V10.5625C1.21875 11.2356 1.7644 11.7812 2.4375 11.7812H10.5625C11.2356 11.7812 11.7812 11.2356 11.7812 10.5625V3.25C11.7812 2.5769 11.2356 2.03125 10.5625 2.03125Z"
                     stroke="#94A6BE"
@@ -61,7 +61,7 @@ const Card = ({ id, themeClass, themeText, title, date, onClickCard }) => {
                   />
                 </g>
                 <defs>
-                  <clipPath id="clip0_1_415">
+                  <clipPath id={'clip0_1_415_${id}'}>
                     <rect width="13" height="13" fill="white" />
                   </clipPath>
                 </defs>

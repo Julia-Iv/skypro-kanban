@@ -4,7 +4,7 @@ import PopNewCardCalendar from "./PopNewCardCalendar";
 import ThemeDomCategories from "./ThemeDomCategories";
 import PopBrowseBtn from "./PopBrowseBtn";
 
-const PopBrowse = ({ card, onClose }) => {
+const PopBrowse = ({ card, onClose, onDelete }) => {
   if (!card) return null;
 
   const [isEdit, setIsEdit] = useState(false);
@@ -22,7 +22,6 @@ const PopBrowse = ({ card, onClose }) => {
   const handleSave = () => {
     console.log("Сохраненные данные карточки с новыми датами:", editedCard);
     setIsEdit(false);
-    // Например: onSave(editedCard);
   };
 
   return (
@@ -98,31 +97,26 @@ const PopBrowse = ({ card, onClose }) => {
               {isEdit ? (
                 // Кнопки режима РЕДАКТИРОВАНИЯ (Макет 1)
                 <>
-                  <button
-                    className="btn-edit__save"
-                    onClick={ handleSave }
-                  >
+                  <button className="btn-edit__save" onClick={handleSave}>
                     Сохранить
                   </button>
-                  <button
-                    className="btn-edit__cancel"
-                    onClick={ handleCancel }
-                  >
+                  <button className="btn-edit__cancel" onClick={handleCancel}>
                     Отменить
                   </button>
                   <button className="btn-edit__delete">Удалить задачу</button>
+                  <button className="btn-edit__delete" onClick={onDelete}>
+                    Удалить задачу
+                  </button>
                 </>
               ) : (
-                // Кнопки режима ПРОСМОТРА (Макет 2)
                 <>
-                  {/* При клике переключаем режим на true  */}
                   <button
                     className="btn-browse__edit"
                     onClick={() => setIsEdit(true)}
                   >
                     Редактировать задачу
                   </button>
-                  <button className="btn-browse__delete">Удалить задачу</button>
+                  <button className="btn-browse__delete" onClick={onDelete}>Удалить задачу</button>
                 </>
               )}
 

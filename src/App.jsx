@@ -55,8 +55,8 @@ function App() {
     setUser(null);
     setCards([]);
   };
+  
 
- 
   return (
     <div className="wrapper" style={appStyles}>
       {isLoading ? (
@@ -73,20 +73,17 @@ function App() {
             path="/"
             element={
               user ? (
-              <>
-                <Header user={user} />
-                <Main cards={cards} />
-                <Outlet />
-              </>
+                <>
+                  <Header user={user} />
+                  <Main cards={cards} />
+                  <Outlet />
+                </>
               ) : (
                 <Navigate to="/login" replace />
               )
             }
           >
-            <Route
-              path="exit"
-              element={<PopExit onConfirm={handleLogout} />}
-            />
+            <Route path="exit" element={<PopExit onConfirm={handleLogout} />} />
             <Route
               path="add-task"
               element={<PopNewCard setCards={setCards} token={token} />}
@@ -94,11 +91,19 @@ function App() {
 
             <Route
               path="task/:id"
-              element={<TaskPage cards={cards} setCards={setCards} token={token}/>}
+              element={
+                <TaskPage cards={cards} setCards={setCards} token={token} />
+              }
             />
           </Route>
-          <Route path="/login" element={<LoginPage setUser={setUser} user={user} />} />
-          <Route path="/register" element={<RegisterPage setUser={setUser} user={user} />} />
+          <Route
+            path="/login"
+            element={<LoginPage setUser={setUser} user={user} />}
+          />
+          <Route
+            path="/register"
+            element={<RegisterPage setUser={setUser} user={user} />}
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       )}
@@ -119,6 +124,5 @@ const loaderStyles = {
   fontFamily: "sans-serif",
   color: "#565eef",
 };
-
 
 export default App;
