@@ -25,14 +25,16 @@ const RegisterPage = ({ setUser }) => {
       const data = await api.register({ name, login, password });
 
       // Проверяем, пришел ли пользователь в ответе сервера
-      if (data && data.user) {
+      if (data && data.token) {
         // Сохраняем его в localStorage 
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("user", JSON.stringify(data));
         // Обновляем глобальный стейт в App.jsx, чтобы войти в приложение
-        setUser(data.user);
+        setUser(data);
         // Перенаправляем пользователя на главную страницу доски
         navigate("/");
-              }
+              } else {
+    setError("Сервер вернул некорректный ответ. Попробуйте еще раз.");
+  }
     } catch (err) {
       console.error("Полная ошибка регистрации в консоли:", err);
       

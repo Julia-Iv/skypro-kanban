@@ -7,7 +7,7 @@ const TaskPage = ({ cards, setCards, token }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   // Находим нужную задачу в массиве данных по id
-  const currentCard = cards.find((card) => String(card.id) === String(id));
+  const currentCard = cards?.find((card) => String(card.id) === String(id));
 
   // Функция для закрытия модального окна и возврата на главную доску
   const handleClose = () => {
@@ -44,12 +44,29 @@ const TaskPage = ({ cards, setCards, token }) => {
   const handleUpdateTask = async (updatedFields) => {
     try {
       // Отправляем измененные поля на бэкенд
-      const targetId = currentCard._id || currentCard.id || id;
+      const targetId = currentCard?._id || currentCard?.id || id;
+      if (!targetId || targetId === "undefined") {
+      alert("Не удалось определить ID задачи для обновления");
+      return;
+    }
       const data = await api.updateTask(targetId, updatedFields, token);
 
       // Обновляем локальный стейт приложения
+if (data && data.tasks && data.tasks.length > 0) {
+      // Если сервер успешно вернул новый массив карточек — записываем его
       setCards(data.tasks);
-      navigate("/");
+    } else {
+      // 🌟 ЗАПАСНОЙ ПЛАН (Если сервер багует или присылает пустой массив):
+      // Обновляем измененную карточку локально прямо в текущем стейте, 
+      // чтобы карточки на доске гарантированно НЕ ИСЧЕЗАЛИ
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          String(card._id || card.id) === String(targetId)
+            ? { ...card, ...updatedFields }
+            : card
+        )
+      );
+    }      navigate("/");
     } catch (error) {
       console.error("Ошибка при обновлении задачи:", error);
       alert("Не удалось сохранить изменения.");

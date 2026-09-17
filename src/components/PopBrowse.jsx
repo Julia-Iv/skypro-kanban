@@ -4,13 +4,21 @@ import PopNewCardCalendar from "./PopNewCardCalendar";
 import ThemeDomCategories from "./ThemeDomCategories";
 import PopBrowseBtn from "./PopBrowseBtn";
 
-const PopBrowse = ({ card, onClose, onDelete }) => {
+const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
   if (!card) return null;
 
   const [isEdit, setIsEdit] = useState(false);
   // Создаем локальный изменяемый стейт для задачи на основе пропса card,
   // чтобы можно было редактировать даты и данные без мгновенной перезаписи оригинала
   const [editedCard, setEditedCard] = useState({ ...card });
+  // Список всех возможных статусов бэкенда Skypro
+  const statusOptions = [
+    "Без статуса",
+    "Нужно сделать",
+    "В работе",
+    "Тестирование",
+    "Готово",
+  ];
 
   // Сброс изменений при отмене
   const handleCancel = () => {
@@ -18,11 +26,31 @@ const PopBrowse = ({ card, onClose, onDelete }) => {
     setIsEdit(false);
   };
 
-  // Функция обновления из верхнего стейта/API)
-  const handleSave = () => {
-    console.log("Сохраненные данные карточки с новыми датами:", editedCard);
-    setIsEdit(false);
+  // функцию сохранения данных карточки
+  const handleSave = async () => {
+    try {
+      // Собираем измененные поля, которые требует API Skypro (status, description, date)
+      const updatedFields = {
+        title: editedCard.title,
+        topic: editedCard.topic,
+        status: editedCard.status,
+        description: editedCard.description,
+        date: editedCard.date,
+      };
+
+      // Вызываем метод отправки на бэкенд из TaskPage.jsx
+      await onUpdate(updatedFields);
+      setIsEdit(false);
+    } catch (error) {
+      console.error("Не удалось сохранить карточку:", error);
+    }
   };
+  // Добавляем обработчик для переключения статуса задачи
+  const handleStatusChange = (newStatus) => {
+    if (!isEdit) return; // Менять статус можно только в режиме редактирования
+    setEditedCard((prev) => ({ ...prev, status: newStatus }));
+  };
+
 
   return (
     <div
@@ -63,23 +91,28 @@ const PopBrowse = ({ card, onClose, onDelete }) => {
             <div className="pop-browse__status status">
               <p className="status__p subttl">Статус</p>
               <div className="status__themes">
-                <div className={`status__theme ${isEdit ? "" : "_hide"}`}>
-                  <p>Без статуса</p>
-                </div>
-                <div className="status__theme _gray">
-                  <p className="_gray">Нужно сделать</p>
-                </div>
-                <div className={`status__theme ${isEdit ? "" : "_hide"}`}>
-                  <p>В работе</p>
-                </div>
-                <div className={`status__theme ${isEdit ? "" : "_hide"}`}>
-                  <p>Тестирование</p>
-                </div>
-                <div className={`status__theme ${isEdit ? "" : "_hide"}`}>
-                  <p>Готово</p>
-                </div>
+                {/*Динамический вывод статусов */}
+                {statusOptions.map((statusName) => {
+                  const isActive = editedCard.status === statusName;
+                  // В режиме просмотра прячем все остальные статусы, кроме текущегоактивного
+                  const visibilityClass = !isEdit && !isActive ? "_hide" : "";
+                  // Активный статус выделяется серым фоном по стилям макета
+                  const activeClass = isActive ? "_gray" : "";
+
+                  return (
+                    <div
+                      key={statusName}
+                      className={`status__theme ${visibilityClass} ${activeClass}`}
+                      style={{ cursor: isEdit ? "pointer" : "default" }}
+                      onClick={() => handleStatusChange(statusName)}
+                    >
+                      <p className={isActive ? "_gray" : ""}>{statusName}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
+
             <div className="pop-browse__wrap">
               <PopBrowseForm card={editedCard} isEdit={isEdit} />
               <PopNewCardCalendar
@@ -95,17 +128,13 @@ const PopBrowse = ({ card, onClose, onDelete }) => {
               style={{ display: "flex", gap: "10px", marginTop: "20px" }}
             >
               {isEdit ? (
-                // Кнопки режима РЕДАКТИРОВАНИЯ (Макет 1)
+                // Кнопки режима РЕДАКТИРОВАНИЯ
                 <>
                   <button className="btn-edit__save" onClick={handleSave}>
                     Сохранить
                   </button>
                   <button className="btn-edit__cancel" onClick={handleCancel}>
                     Отменить
-                  </button>
-                  <button className="btn-edit__delete">Удалить задачу</button>
-                  <button className="btn-edit__delete" onClick={onDelete}>
-                    Удалить задачу
                   </button>
                 </>
               ) : (
@@ -116,7 +145,9 @@ const PopBrowse = ({ card, onClose, onDelete }) => {
                   >
                     Редактировать задачу
                   </button>
-                  <button className="btn-browse__delete" onClick={onDelete}>Удалить задачу</button>
+                  <button className="btn-browse__delete" onClick={onDelete}>
+                    Удалить задачу
+                  </button>
                 </>
               )}
 
