@@ -9,6 +9,8 @@ const topicStyles = {
 };
 
 const Column = ({ title, tasks }) => {
+  console.log(`Колонка: ${title}, Задачи:`, tasks);
+
   return (
     <MainColumn>
       <div className="column__title">
@@ -16,16 +18,20 @@ const Column = ({ title, tasks }) => {
       </div>
 
       <div className="cards">
-        {tasks?.map((task) => (
-          <Card
-            key={task.id}
-            id={task.id}
-            themeClass={topicStyles[task.topic] || "default"}
-            themeText={task.topic}
-            title={task.title}
-            date={task.date}
-          />
-        ))}
+        {tasks?.map((task, index) => {
+          const taskId = task._id || task.id;
+          const taskKey = taskId || `fallback-key-${index}`;
+          return (
+            <Card
+              key={taskKey}
+              id={taskId}
+              themeClass={topicStyles[task.topic] || "default"}
+              themeText={task.topic}
+              title={task.title}
+              date={task.date}
+            />
+          );
+        })}
       </div>
     </MainColumn>
   );
