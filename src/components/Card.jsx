@@ -12,7 +12,25 @@ import {
   CardDate,
 } from "./Card.styled";
 
-const Card = ({ id, themeClass, themeText, title, date, onClickCard }) => {
+const Card = ({ id, _id, themeClass, themeText, title, date, onClickCard }) => {
+
+  // Безопасная функция форматирования даты под формат ДД.ММ.ГГ
+  const formatDateForCard = (inputDate) => {
+    if (!inputDate) return "";
+
+    // Пытаемся создать объект даты из любых входных данных
+    const parsedDate = new Date(inputDate);
+
+    // Если дата невалидна — возвращаем пустую строку вместо ошибки
+    if (isNaN(parsedDate.getTime())) return String(inputDate);
+
+    return parsedDate.toLocaleDateString("ru-RU", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "2-digit", // Дает две цифры года, например "26" вместо "2026"
+    });
+  };
+
   return (
     <CardsItem>
       <Link
@@ -45,7 +63,7 @@ const Card = ({ id, themeClass, themeText, title, date, onClickCard }) => {
                 viewBox="0 0 13 13"
                 fill="none"
               >
-                <g clipPath={"url(#clip0_1_415_${id})"}>
+                <g clipPath={`url(#clip0_1_415_${id})`}>
                   <path
                     d="M10.5625 2.03125H2.4375C1.7644 2.03125 1.21875 2.5769 1.21875 3.25V10.5625C1.21875 11.2356 1.7644 11.7812 2.4375 11.7812H10.5625C11.2356 11.7812 11.7812 11.2356 11.7812 10.5625V3.25C11.7812 2.5769 11.2356 2.03125 10.5625 2.03125Z"
                     stroke="#94A6BE"
@@ -61,19 +79,12 @@ const Card = ({ id, themeClass, themeText, title, date, onClickCard }) => {
                   />
                 </g>
                 <defs>
-                  <clipPath id={"clip0_1_415_${id}"}>
+                  <clipPath id={`clip0_1_415_${id}`}>
                     <rect width="13" height="13" fill="white" />
                   </clipPath>
                 </defs>
               </svg>
-              <p>
-                {" "}
-                {date instanceof Date
-                  ? date.toLocaleDateString("ru-RU")
-                  : typeof date === "object" && date !== null
-                    ? new Date(date).toLocaleDateString("ru-RU")
-                    : String(date || "")}
-              </p>
+              <p>{formatDateForCard(date)}</p>
             </CardDate>
           </CardContent>
         </CardsCard>

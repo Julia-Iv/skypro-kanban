@@ -4,6 +4,11 @@ import PopNewCardCalendar from "./PopNewCardCalendar";
 import ThemeDomCategories from "./ThemeDomCategories";
 import PopBrowseBtn from "./PopBrowseBtn";
 
+const topicStyles = {
+  "Web Design": "_orange",
+  Research: "_green",
+  Copywriting: "_purple",
+};
 const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
   if (!card) return null;
 
@@ -29,13 +34,24 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
   // функцию сохранения данных карточки
   const handleSave = async () => {
     try {
+      let apiDate = editedCard.date || editedCard.selectedStartDate;
+
+      if (apiDate instanceof Date) {
+        apiDate = apiDate.toISOString();
+      } else if (apiDate && typeof apiDate === "string") {
+        const parsed = new Date(apiDate);
+        if (!isNaN(parsed.getTime())) {
+          apiDate = parsed.toISOString();
+        }
+      }
+
       // Собираем измененные поля, которые требует API Skypro (status, description, date)
       const updatedFields = {
         title: editedCard.title,
-        topic: editedCard.topic,
+        topic: editedCard.topic || editedCard.themeText,
         status: editedCard.status,
         description: editedCard.description,
-        date: editedCard.date,
+        date: apiDate,
       };
 
       // Вызываем метод отправки на бэкенд из TaskPage.jsx
@@ -50,7 +66,22 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
     if (!isEdit) return; // Менять статус можно только в режиме редактирования
     setEditedCard((prev) => ({ ...prev, status: newStatus }));
   };
+  // Метод для отслеживания изменений текста внутри формы
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedCard((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
+  // Функция-обработчик для смены категории (для работы с ThemeDomCategories)
+  const handleTopicChange = (newTopic) => {
+    setEditedCard((prev) => ({ ...prev, topic: newTopic }));
+  };
+
+  // Получаем текущий класс цвета темы на основе реального поля topic
+  const currentThemeClass = topicStyles[editedCard.topic] || "_orange";
 
   return (
     <div
@@ -81,10 +112,10 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
             <div className="pop-browse__top-block">
               <h3 className="pop-browse__ttl">{editedCard.title}</h3>
               <div
-                className={`categories__theme theme-top ${editedCard.themeClass || "_orange"} _active-category`}
+                className={`categories__theme theme-top ${currentThemeClass} _active-category`}
               >
-                <p className={editedCard.themeClass || "_orange"}>
-                  {editedCard.themeText || "Web Design"}
+                <p className={currentThemeClass}>
+                  {editedCard.topic || "Без темы"}
                 </p>
               </div>
             </div>
@@ -114,7 +145,11 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
             </div>
 
             <div className="pop-browse__wrap">
-              <PopBrowseForm card={editedCard} isEdit={isEdit} />
+              <PopBrowseForm
+                card={editedCard}
+                isEdit={isEdit}
+                onChange={handleInputChange}
+              />
               <PopNewCardCalendar
                 taskData={editedCard}
                 setTaskData={setEditedCard}
@@ -122,7 +157,12 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
               />
             </div>
 
-            {isEdit && <ThemeDomCategories />}
+            {isEdit && (
+              <ThemeDomCategories
+                topic={editedCard.topic}
+                onChangeTopic={handleTopicChange}
+              />
+            )}
             <div
               className="pop-browse__btn-browse"
               style={{ display: "flex", gap: "10px", marginTop: "20px" }}

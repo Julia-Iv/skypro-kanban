@@ -19,11 +19,12 @@ const Column = ({ title, tasks }) => {
 
       <div className="cards">
         {tasks?.map((task, index) => {
-          const taskKey = task.id || task._id || `fallback-key-${index}`;
+          const taskId = task._id || task.id;
+          const taskKey = taskId || `fallback-key-${index}`;
           return (
             <Card
               key={taskKey}
-              id={task.id}
+              id={taskId}
               themeClass={topicStyles[task.topic] || "default"}
               themeText={task.topic}
               title={task.title}
