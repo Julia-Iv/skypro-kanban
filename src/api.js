@@ -43,19 +43,18 @@ export const api = {
 
   // Изменить задачу (включая смену статуса/колонки)
   async updateTask(taskId, taskData, token) {
-    const response = await kanbanApi.patch(
-      `/${taskId}`,
-      JSON.stringify(taskData), // 🌟 Также превращаем в строку на будущее
+    const response = await kanbanApi.patch(`/${taskId}`,       JSON.stringify(taskData), 
       {
         headers: {
           ...getAuthHeaders(token),
-          "Content-Type": "", // 🌟 Очищаем заголовок
+          "Content-Type": "", 
         },
-      },
+      }
     );
 
     return response.data;
   },
+
 
   // Удалить задачу
   async deleteTask(taskId, token) {

@@ -59,11 +59,7 @@ function App() {
 
   return (
     <div className="wrapper" style={appStyles}>
-      {isLoading ? (
-        <div style={loaderStyles}>
-          <h2>Данные загружаются...</h2>
-        </div>
-      ) : error ? ( // Обработка сценария ошибки на сервере
+      { error ? ( // Обработка сценария ошибки на сервере
         <div style={loaderStyles}>
           <h2 style={{ color: "#ef5656" }}>{error}</h2>
         </div>
@@ -75,7 +71,7 @@ function App() {
               user ? (
                 <>
                   <Header user={user} />
-                  <Main cards={cards} />
+                  <Main cards={cards} isLoading={isLoading}/>
                   <Outlet />
                 </>
               ) : (

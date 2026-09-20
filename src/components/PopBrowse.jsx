@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PopBrowseForm from "./PopBrowseForm";
 import PopNewCardCalendar from "./PopNewCardCalendar";
 import ThemeDomCategories from "./ThemeDomCategories";
@@ -16,6 +16,12 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
   // Создаем локальный изменяемый стейт для задачи на основе пропса card,
   // чтобы можно было редактировать даты и данные без мгновенной перезаписи оригинала
   const [editedCard, setEditedCard] = useState({ ...card });
+  useEffect(() => {
+    if (card) {
+      setEditedCard({ ...card });
+    }
+  }, [card?._id, card?.id]);
+
   // Список всех возможных статусов бэкенда Skypro
   const statusOptions = [
     "Без статуса",
@@ -47,12 +53,23 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
 
       // Собираем измененные поля, которые требует API Skypro (status, description, date)
       const updatedFields = {
-        title: editedCard.title,
-        topic: editedCard.topic || editedCard.themeText,
-        status: editedCard.status,
-        description: editedCard.description,
+        id: card.id || card._id,
+        _id: card._id || card.id,
+        title: String(editedCard.title || card.title || ""),
+        topic: String(editedCard.topic || card.topic || "Web Design"),
+        status: String(editedCard.status || card.status || "Нужно сделать"), // Жесткая привязка к измененному статусу
+        description: String(
+          editedCard.description !== undefined
+            ? editedCard.description
+            : card.description || "",
+        ),
         date: apiDate,
       };
+
+      console.log(
+        "Кликнули 'Сохранить'. Отправляем поля на бэкенд:",
+        updatedFields,
+      );
 
       // Вызываем метод отправки на бэкенд из TaskPage.jsx
       await onUpdate(updatedFields);
@@ -163,43 +180,14 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
                 onChangeTopic={handleTopicChange}
               />
             )}
-            <div
-              className="pop-browse__btn-browse"
-              style={{ display: "flex", gap: "10px", marginTop: "20px" }}
-            >
-              {isEdit ? (
-                // Кнопки режима РЕДАКТИРОВАНИЯ
-                <>
-                  <button className="btn-edit__save" onClick={handleSave}>
-                    Сохранить
-                  </button>
-                  <button className="btn-edit__cancel" onClick={handleCancel}>
-                    Отменить
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    className="btn-browse__edit"
-                    onClick={() => setIsEdit(true)}
-                  >
-                    Редактировать задачу
-                  </button>
-                  <button className="btn-browse__delete" onClick={onDelete}>
-                    Удалить задачу
-                  </button>
-                </>
-              )}
-
-              {/* Кнопка Закрыть видна всегда */}
-              <button
-                className="btn-browse__close"
-                onClick={onClose}
-                style={{ marginLeft: "auto" }}
-              >
-                Закрыть
-              </button>
-            </div>
+            <PopBrowseBtn
+              isEdit={isEdit}
+              onClose={onClose}
+              onEditToggle={() => setIsEdit(true)}
+              onDelete={onDelete}
+              onSave={handleSave}
+              onCancel={handleCancel}
+            />
           </div>
         </div>
       </div>

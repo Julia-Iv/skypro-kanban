@@ -51,28 +51,87 @@ const TaskPage = ({ cards, setCards, token }) => {
         alert("Не удалось определить ID задачи для обновления");
         return;
       }
-      const data = await api.updateTask(targetId, updatedFields, token);
-
-      // Обновляем локальный стейт приложения
-      if (data && data.tasks && data.tasks.length > 0) {
-        // Если сервер успешно вернул новый массив карточек — записываем его
-        setCards(data.tasks);
+      let finalDate = updatedFields.date || currentCard.date;
+      if (finalDate instanceof Date) {
+        finalDate = finalDate.toISOString();
+      } else if (typeof finalDate === "string") {
+        const parsedDate = new Date(finalDate);
+        finalDate = isNaN(parsedDate.getTime())
+          ? new Date().toISOString()
+          : parsedDate.toISOString();
       } else {
-        // 🌟 ЗАПАСНОЙ ПЛАН (Если сервер багует или присылает пустой массив):
-        // Обновляем измененную карточку локально прямо в текущем стейте,
-        // чтобы карточки на доске гарантированно НЕ ИСЧЕЗАЛИ
+        finalDate = new Date().toISOString();
+      }
+
+      const validTopics = ["Web Design", "Research", "Copywriting"];
+      let finalTopic = updatedFields.topic || currentCard.topic;
+      if (!validTopics.includes(finalTopic)) {
+        finalTopic = "Web Design"; // Дефолтное значение для прохождения валидации
+      }
+      let finalStatus =
+        updatedFields.status || currentCard.status || "Нужно сделать";
+      if (finalStatus === "Без статуса") {
+        finalStatus = "";
+      }
+
+      const cleanTaskData = {
+        title: String(
+          updatedFields.title || currentCard.title || "Без названия",
+        ),
+        topic: String(finalTopic),
+        status: String(finalStatus),
+        description: String(
+          updatedFields.description !== undefined
+            ? updatedFields.description
+            : currentCard.description || "",
+        ),
+        date: finalDate,
+      };
+
+      console.log("Финальный JSON, отправляемый через Axios:", cleanTaskData);
+
+      const data = await api.updateTask(targetId, cleanTaskData, token);
+      console.log("Успешный ответ бэкенда:", data);
+
+      // Проверяем ответ от API
+      if  (data && data.tasks && Array.isArray(data.tasks)) {
+        // Если сервер вернул { tasks: [...] } — записываем актуальный массив от сервера
+        setCards(data.tasks);
+      } else if (Array.isArray(data)) {
+        // Если сервер вернул массив напрямую [...] — записываем его
+        setCards(data);
+      } else if (data && (data.task || data._id || data.id)) {
+        // Если сервер вернул одну обновленную карточку — мержим её в текущий стейт
+        const serverCard = data.task || data;
+        setCards((prevCards) =>
+          prevCards.map((card) =>
+            String(card._id || card.id) === String(targetId)
+              ? { ...card, ...serverCard }
+              : card
+          )
+        );
+      } else {
+        // Запасной план: если сервер вернул пустой объект (но статус 200 OK) —
+        // фиксируем изменения в стейте локально на основе отправленных полей
         setCards((prevCards) =>
           prevCards.map((card) =>
             String(card._id || card.id) === String(targetId)
               ? { ...card, ...updatedFields }
-              : card,
-          ),
+              : card
+          )
         );
       }
+
+      // Перенаправляем на главную доску только ПОСЛЕ того, как отработал setCards
       navigate("/");
+
     } catch (error) {
       console.error("Ошибка при обновлении задачи:", error);
-      alert("Не удалось сохранить изменения.");
+
+      // Выводим в alert то, что ответил сервер, чтобы точно увидеть причину
+      const message =
+        error.response?.data?.error || "Проверьте заполнение полей формы.";
+      alert(`Ошибка 400 при сохранении: ${message}`);
     }
   };
 

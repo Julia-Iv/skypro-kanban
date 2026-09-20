@@ -639,6 +639,128 @@ body {
   display: block;
   margin-bottom: 20px;
 }
+
+.pop-browse__btn-browse {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Разносит левую группу и кнопку Закрыть по краям */
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Группа кнопок слева (Сохранить + Отменить + Удалить) */
+.pop-browse__btn-group {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Расстояние между кнопками по макету */
+}
+
+/* Базовые стили для кнопок-заливок (Сохранить, Закрыть) */
+.pop-browse__btn-browse button {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.14px;
+  padding: 0 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px; /* Фиксированная высота кнопок */
+}
+
+/* Анимация клика */
+.pop-browse__btn-browse button:active {
+  transform: scale(0.98);
+}
+
+/* --- СТИЛИ ДЛЯ КНОПОК РЕЖИМА РЕДАКТИРОВАНИЯ --- */
+
+/* Кнопка "Сохранить" */
+.btn-edit__save {
+  background-color: #565EEF;
+  color: #FFFFFF;
+  border: none;
+}
+.btn-edit__save:hover {
+  background-color:  #565EEF;
+}
+
+/* Кнопка "Отменить" */
+.btn-edit__cancel {
+  background-color: transparent;
+  color: #565EEF;
+  border: 0.7px solid #565EEF;
+}
+.btn-edit__cancel:hover {
+  background-color: #565EEF;
+  color: #FFFFFF;
+}
+
+/* КНОПКА "УДАЛИТЬ ЗАДАЧУ" В РЕЖИМЕ РЕДАКТИРОВАНИЯ (Из макета) */
+.btn-edit__delete {
+  background-color: transparent;
+  color: #565EEF;
+  border: none; /* В макете у третьей кнопки в ряду нет рамки */
+  padding: 10px 12px !important; /* Уменьшенные боковые отступы */
+}
+.btn-edit__delete:hover {
+  background-color: rgba(86, 94, 239, 0.08); /* Легкий эффект при наведении */
+  border-radius: 4px;
+}
+
+/* --- СТИЛИ ДЛЯ КНОПОК РЕЖИМА ПРОСМОТРА --- */
+
+.btn-browse__edit {
+  background-color: transparent;
+  color: #565EEF;
+  border: 0.7px solid #565EEF;
+}
+.btn-browse__edit:hover {
+  background-color: #565EEF;
+  color: #FFFFFF;
+}
+
+.btn-browse__delete {
+  background-color: transparent;
+  color: #565EEF;
+  border: 0.7px solid #565EEF;
+}
+.btn-browse__delete:hover {
+  background-color: rgba(86, 94, 239, 0.08);
+}
+.btn-edit__delete._btn-bor {
+  background-color: transparent;
+  color: #565EEF;
+  border: 0.7px solid #565EEF;
+}
+
+/* Принудительно синхронизируем эффекты наведения с кнопкой "Отменить" (_hover03) */
+.btn-edit__delete._btn-bor:hover {
+  background-color:  #565EEF; /* Тот же цвет, что и в вашем классе ._hover03 */
+  color: #ffffff;
+}
+
+/* На всякий случай дублируем эффект для ссылок внутри, если они где-то остались */
+.btn-edit__delete._btn-bor:hover a {
+  color: #ffffff;
+}
+
+/* --- ОБЩАЯ КНОПКА ЗАКРЫТЬ (ВСЕГДА СПРАВА) --- */
+.btn-browse__close {
+  background-color: #565EEF;
+  color: #FFFFFF;
+  border: none;
+  margin-left: auto; /* На всякий случай гарантирует прижатие вправо */
+}
+.btn-browse__close:hover {
+  background-color: #33399B;
+}
+/*
 .pop-browse__btn-browse,
 .pop-browse__btn-edit {
   display: flex;
@@ -656,7 +778,7 @@ body {
 .pop-browse__btn-edit .btn-group button {
   margin-right: 8px;
 }
-
+*/
 .form-browse__block {
   display: flex;
   flex-direction: column;
