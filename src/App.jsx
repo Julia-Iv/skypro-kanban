@@ -37,7 +37,19 @@ function App() {
     api
       .getTasks(token)
       .then((data) => {
-        setCards(data.tasks);
+        const serverTasks = data.tasks || data;
+        const fromServerStatus = {
+          "No Status": "Без статуса",
+          "In Progress": "В работе",
+          Testing: "Тестирование",
+          Done: "Готово",
+        };
+        const formattedTasks = serverTasks.map((task) => ({
+          ...task,
+          status: fromServerStatus[task.status] || "Без статуса",
+        }));
+
+        setCards(serverTasks);
         setError(null);
       })
       .catch((err) => {
@@ -48,61 +60,61 @@ function App() {
         setIsLoading(false);
       });
   }, [token]);
-
   // Функция для выхода из аккаунта
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
     setCards([]);
+    setError(null);
   };
-  
 
   return (
     <div className="wrapper" style={appStyles}>
-      { error ? ( // Обработка сценария ошибки на сервере
-        <div style={loaderStyles}>
-          <h2 style={{ color: "#ef5656" }}>{error}</h2>
-        </div>
-      ) : (
-        <Routes>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            user ? (
+              <>
+                <Header user={user} />
+                {/* Если есть ошибка, выводим её сообщение, иначе рендерим доску */}
+                {error ? (
+                  <div style={loaderStyles}>
+                    <h2 style={{ color: "#ef5656" }}>{error}</h2>
+                  </div>
+                ) : (
+                  <Main cards={cards} isLoading={isLoading} />
+                )}
+                <Outlet />
+              </>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        >
+          <Route path="exit" element={<PopExit onConfirm={handleLogout} />} />
           <Route
-            path="/"
-            element={
-              user ? (
-                <>
-                  <Header user={user} />
-                  <Main cards={cards} isLoading={isLoading}/>
-                  <Outlet />
-                </>
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          >
-            <Route path="exit" element={<PopExit onConfirm={handleLogout} />} />
-            <Route
-              path="add-task"
-              element={<PopNewCard setCards={setCards} token={token} />}
-            />
+            path="add-task"
+            element={<PopNewCard setCards={setCards} token={token} />}
+          />
 
-            <Route
-              path="task/:id"
-              element={
-                <TaskPage cards={cards} setCards={setCards} token={token} />
-              }
-            />
-          </Route>
           <Route
-            path="/login"
-            element={<LoginPage setUser={setUser} user={user} />}
+            path="task/:id"
+            element={
+              <TaskPage cards={cards} setCards={setCards} token={token} />
+            }
           />
-          <Route
-            path="/register"
-            element={<RegisterPage setUser={setUser} user={user} />}
-          />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      )}
+        </Route>
+        <Route
+          path="/login"
+          element={<LoginPage setUser={setUser} user={user} />}
+        />
+        <Route
+          path="/register"
+          element={<RegisterPage setUser={setUser} user={user} />}
+        />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </div>
   );
 }
@@ -116,7 +128,7 @@ const loaderStyles = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  height: "100vh",
+  height: "70vh",
   fontFamily: "sans-serif",
   color: "#565eef",
 };

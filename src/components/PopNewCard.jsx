@@ -30,26 +30,55 @@ const PopNewCard = ({ setCards, token }) => {
       alert("Пожалуйста, введите название задачи");
       return;
     }
+        try {
+      //  Форматируем дату в ISO-строку, если это объект Date
+            let formattedDate = taskData.date || new Date();
+      if (formattedDate instanceof Date) {
+        // Убираем миллисекунды, сохраняя Z
+        formattedDate = formattedDate.toISOString().replace(/\.\d{3}/, ''); 
+      } else if (typeof formattedDate === "string") {
+        // Если это строка, проверяем наличие Z. Если её нет — дописываем
+        if (formattedDate.includes('.')) {
+          formattedDate = formattedDate.split('.')[0] + 'Z';
+        } else if (!formattedDate.endsWith('Z')) {
+          formattedDate = formattedDate + 'Z';
+        }
+      } else {
+        formattedDate = new Date().toISOString().replace(/\.\d{3}/, '');
+      }
 
-    try {
+      // Список строго валидных категорий для бэкенда Skypro
+      const validTopics = ["Web Design", "Research", "Copywriting"];
+      let finalTopic = validTopics.includes(taskData.category) ? taskData.category : "Web Design";
+
       const taskToSend = {
-        title: taskData.title,
-        topic: taskData.category || "Web Design", // Переименовываем category в topic и задаем дефолт, если категория не выбрана
-        description: taskData.description,
-        date: taskData.date,
+        title: taskData.title.trim(),
+        topic: String(finalTopic), 
+        description: taskData.description ? taskData.description.trim() : "",
+        date: formattedDate // Здесь гарантированно будет строка вида '2026-09-23T21:00:00Z'
       };
+
+
+
+      console.log("Отправляем на сервер для создания задачи:", taskToSend);
+
 
       // Отправляем на сервер адаптированный объект taskToSend вместо taskData
       const data = await api.createTask(taskToSend, token);
 
       // Добавляем новую карточку в глобальный стейт приложения
-      setCards(data.tasks);
+            if (data && data.tasks) {
+        setCards(data.tasks);
+      } else if (Array.isArray(data)) {
+        setCards(data);
+      }
 
       // Возвращаемся на главную страницу (закрываем модальное окно)
       navigate("/");
     } catch (error) {
       console.error("Ошибка при создании задачи:", error);
-      alert("Не удалось создать задачу. Попробуйте еще раз.");
+      const message = error.response?.data?.error || "Проверьте заполнение полей.";
+      alert(`Не удалось создать задачу: ${message}`);
     }
   };
   return (
