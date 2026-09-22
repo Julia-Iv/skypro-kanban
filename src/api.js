@@ -17,7 +17,8 @@ const kanbanApi = axios.create({
 //  Axios для работы с пользователями (Авторизация)
 const userApi = axios.create({
   baseURL: "https://wedev-api.sky.pro/api/user",
-  transformRequest: withoutJsonContentType,
+    transformRequest: withoutJsonContentType,
+
 });
 
 // Вспомогательная функция для динамического добавления токена в заголовки
@@ -72,7 +73,7 @@ export const api = {
 
   // Регистрация пользователя
   async register({ name, login, password }) {
-    const response = await userApi.post("", { name, login, password });
+    const response = await userApi.post("/", { name, login, password });
     return response.data;
   },
 };

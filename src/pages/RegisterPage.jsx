@@ -19,32 +19,40 @@ const RegisterPage = ({ setUser }) => {
       alert("Пожалуйста, заполните все поля");
       return;
     }
+    if (password.trim().length < 7) {
+      setError("Пароль должен быть не менее 7 символов.");
+      return;
+    }
 
     try {
       // Отправляем запрос регистрации на бэкенд
-      const data = await api.register({ name, login, password });
+      const data = await api.register({ name: name.trim(), login: login.trim(), password: password.trim() });
+      const userData = data?.user || data;
 
       // Проверяем, пришел ли пользователь в ответе сервера
-      if (data && data.token) {
+      if (userData && userData.token) {
         // Сохраняем его в localStorage 
-        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("user", JSON.stringify(userData));
         // Обновляем глобальный стейт в App.jsx, чтобы войти в приложение
-        setUser(data);
+        setUser(userData);
         // Перенаправляем пользователя на главную страницу доски
         navigate("/");
-              } else {
-    setError("Сервер вернул некорректный ответ. Попробуйте еще раз.");
-  }
-    } catch (err) {
+      } else {
+        setError("Сервер вернул некорректный ответ. Попробуйте еще раз.");
+      }
+   } catch (err) {
       console.error("Полная ошибка регистрации в консоли:", err);
       
-      // Точечно вытаскиваем сообщение от бэкенда Skypro
-      const serverMessage = err.response?.data?.message || err.response?.data?.error || err.message;
+      // ИСПРАВЛЕНО: Вытаскиваем точную причину ошибки, которую вернул бэкенд Sky.pro
+      const serverErrorText = err.response?.data?.error;
       
-      setError(serverMessage || "Не удалось зарегистрироваться. Попробуйте другой логин.");
+      if (serverErrorText) {
+        setError(serverErrorText); // Сервер сам напишет, например: "Пользователь с таким email уже существует"
+      } else {
+        setError("Не удалось зарегистрироваться. Проверьте правильность заполнения полей.");
+      }
     }
   };
-
 
   return (
     <div style={overlayStyles}>

@@ -41,7 +41,8 @@ const PopNewCardCalendar = ({ taskData, setTaskData, isEdit }) => {
 
   // Логика выбора диапазона дат
   const handleDateClick = (clickedDate) => {
-const startDate = taskData?.selectedStartDate;
+    if (!isEdit) return;
+    const startDate = taskData?.selectedStartDate;
     const endDate = taskData?.selectedEndDate;
 
     setTaskData((prevData) => {

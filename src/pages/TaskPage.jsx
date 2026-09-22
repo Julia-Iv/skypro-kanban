@@ -89,6 +89,8 @@ const TaskPage = ({ cards, setCards, token }) => {
             ? updatedFields.description
             : currentCard.description || "",
         ).trim(),
+        date: updatedFields.date || currentCard.date,
+
       };
 
       console.log("Финальный чистый JSON для отправки:", cleanTaskData);

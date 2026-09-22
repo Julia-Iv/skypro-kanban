@@ -40,7 +40,7 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
   // функцию сохранения данных карточки
   const handleSave = async () => {
     try {
-      let apiDate = editedCard.date || editedCard.selectedStartDate;
+      let apiDate = editedCard.selectedStartDate || editedCard.date || card.date;
 
       if (apiDate instanceof Date) {
         apiDate = apiDate.toISOString();
@@ -55,7 +55,7 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
       const updatedFields = {
         id: card.id || card._id,
         _id: card._id || card.id,
-        title: String(editedCard.title || "").trim(),
+        title: String(editedCard.title || card.title || "Без названия").trim(),
         topic: String(editedCard.topic || "Web Design"),
         status: String(editedCard.status || "Без статуса"), 
         description: String(editedCard.description || "").trim(),
