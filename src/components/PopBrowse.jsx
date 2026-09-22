@@ -55,16 +55,13 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
       const updatedFields = {
         id: card.id || card._id,
         _id: card._id || card.id,
-        title: String(editedCard.title || card.title || ""),
-        topic: String(editedCard.topic || card.topic || "Web Design"),
-        status: String(editedCard.status || card.status || "Нужно сделать"), // Жесткая привязка к измененному статусу
-        description: String(
-          editedCard.description !== undefined
-            ? editedCard.description
-            : card.description || "",
-        ),
+        title: String(editedCard.title || "").trim(),
+        topic: String(editedCard.topic || "Web Design"),
+        status: String(editedCard.status || "Без статуса"), 
+        description: String(editedCard.description || "").trim(),
         date: apiDate,
       };
+
 
       console.log(
         "Кликнули 'Сохранить'. Отправляем поля на бэкенд:",

@@ -1,15 +1,23 @@
 import axios from "axios";
 
+const withoutJsonContentType = [
+  (data, headers) => {
+    headers.setContentType(false);
+    return data != null && typeof data === "object"
+      ? JSON.stringify(data)
+      : data;
+  },
+];
+
 // Создаем экземпляр Axios для работы с задачами Kanban
 const kanbanApi = axios.create({
   baseURL: "https://wedev-api.sky.pro/api/kanban",
+  transformRequest: withoutJsonContentType,
 });
-kanbanApi.defaults.headers.get = {};
-kanbanApi.defaults.headers.delete = {};
-
 //  Axios для работы с пользователями (Авторизация)
 const userApi = axios.create({
   baseURL: "https://wedev-api.sky.pro/api/user",
+  transformRequest: withoutJsonContentType,
 });
 
 // Вспомогательная функция для динамического добавления токена в заголовки
@@ -23,10 +31,7 @@ export const api = {
   // Получить все задачи
     async getTasks(token) {
     const response = await kanbanApi.get("", {
-      headers: {
-        ...getAuthHeaders(token),
-        "Content-Type": undefined, // запрещаем передачу Content-Type для GET
-      },
+      headers: getAuthHeaders(token),
     });
     return response.data;
   },
@@ -34,10 +39,8 @@ export const api = {
   // Создать новую задачу
    async createTask(taskData, token) {
     const response = await kanbanApi.post("", taskData, {
-      headers: {
-        ...getAuthHeaders(token),
-        "Content-Type": undefined, // Принудительно заставляем Axios УДАЛИТЬ этот заголовок из запроса
-      },
+      headers: getAuthHeaders(token),
+        
     });
     return response.data;
   },
@@ -47,23 +50,14 @@ export const api = {
   async updateTask(taskId, taskData, token) {
     const response = await kanbanApi.patch(`/${taskId}`, taskData, {
       headers: getAuthHeaders(token),
-      //  Жесткое удаление заголовка через встроенный метод трансформации Axios
-      transformRequest: [
-        (data, headers) => {
-          delete headers["Content-Type"]; // Полностью стираем Content-Type из заголовков запроса
-          return JSON.stringify(data);    // Вручную превращаем объект в JSON-строку
-        },
-      ],
     });
     return response.data;
   },
   // Удалить задачу
     async deleteTask(taskId, token) {
     const response = await kanbanApi.delete(`/${taskId}`, {
-      headers: {
-        ...getAuthHeaders(token),
-        "Content-Type": undefined, // запрещаем передачу Content-Type для DELETE
-      },
+      headers: getAuthHeaders(token),
+        
     });
     return response.data;
   },
@@ -72,21 +66,13 @@ export const api = {
   // --- АВТОРИЗАЦИЯ ---
   // Вход пользователя
     async login({ login, password }) {
-    const response = await userApi.post("/login", { login, password }, {
-      headers: {
-        "Content-Type": undefined, // Удаляем заголовок для авторизации
-      },
-    });
+    const response = await userApi.post("/login", { login, password });
     return response.data;
   },
 
   // Регистрация пользователя
   async register({ name, login, password }) {
-    const response = await userApi.post("", { name, login, password }, {
-      headers: {
-        "Content-Type": undefined, // Удаляем заголовок для регистрации
-      },
-    });
+    const response = await userApi.post("", { name, login, password });
     return response.data;
   },
 };

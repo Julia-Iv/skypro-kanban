@@ -1,6 +1,6 @@
 import React from "react";
 const PopBrowseForm = ({ card, isEdit, onChange }) => {
-  return (
+ return (
     <form
       className="pop-browse__form form-browse"
       id="formBrowseCard"

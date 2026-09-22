@@ -3,7 +3,7 @@ import { useState } from "react";
 import CalendarContent from "./CalendarContent";
 import CalendarPeriod from "./CalendarPeriod";
 
-const PopNewCardCalendar = ({ taskData, setTaskData }) => {
+const PopNewCardCalendar = ({ taskData, setTaskData, isEdit }) => {
   // Вычисляем стартовую дату для инициализации отображаемого месяца
   const baseDate = taskData?.selectedStartDate || taskData?.date || new Date();
   const [currentMonth, setCurrentMonth] = useState(new Date(baseDate));
@@ -26,12 +26,14 @@ const PopNewCardCalendar = ({ taskData, setTaskData }) => {
 
   // Переключение на предыдущий месяц
   const handlePrevMonth = () => {
+    if (!isEdit) return;
     setCurrentMonth(
       new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1),
     );
   };
   // Переключение на следующий месяц
   const handleNextMonth = () => {
+    if(!isEdit) return;
     setCurrentMonth(
       new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1),
     );
@@ -39,7 +41,7 @@ const PopNewCardCalendar = ({ taskData, setTaskData }) => {
 
   // Логика выбора диапазона дат
   const handleDateClick = (clickedDate) => {
-    const startDate = taskData?.selectedStartDate;
+const startDate = taskData?.selectedStartDate;
     const endDate = taskData?.selectedEndDate;
 
     setTaskData((prevData) => {

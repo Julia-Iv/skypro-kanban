@@ -38,18 +38,20 @@ function App() {
       .getTasks(token)
       .then((data) => {
         const serverTasks = data.tasks || data;
+
         const fromServerStatus = {
           "No Status": "Без статуса",
+          "Ready": "Нужно сделать",       
           "In Progress": "В работе",
-          Testing: "Тестирование",
-          Done: "Готово",
+          "Testing": "Тестирование",
+          "Done": "Готово",
         };
         const formattedTasks = serverTasks.map((task) => ({
           ...task,
           status: fromServerStatus[task.status] || "Без статуса",
         }));
 
-        setCards(serverTasks);
+        setCards(formattedTasks);
         setError(null);
       })
       .catch((err) => {

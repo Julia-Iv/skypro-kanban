@@ -17,11 +17,19 @@ const PopNewCard = ({ setCards, token }) => {
     date: new Date(),
   });
 
+  const fromServerStatus = {
+    "No Status": "Без статуса",
+    "Ready": "Нужно сделать",       
+    "In Progress": "В работе",
+    "Testing": "Тестирование",
+    "Done": "Готово",
+  };
+
   const handleClose = (e) => {
     e?.preventDefault();
     navigate("/");
   };
-  // 3. Функция обработки отправки формы на бэкенд
+  // Функция обработки отправки формы на бэкенд
   const handleCreateTask = async (e) => {
     e?.preventDefault();
 
@@ -65,13 +73,18 @@ const PopNewCard = ({ setCards, token }) => {
 
       // Отправляем на сервер адаптированный объект taskToSend вместо taskData
       const data = await api.createTask(taskToSend, token);
+      const serverTasks = data?.tasks || data;
+
 
       // Добавляем новую карточку в глобальный стейт приложения
-            if (data && data.tasks) {
-        setCards(data.tasks);
-      } else if (Array.isArray(data)) {
-        setCards(data);
+      if (serverTasks && Array.isArray(serverTasks)) {
+        const formattedTasks = serverTasks.map((task) => ({
+          ...task,
+          status: fromServerStatus[task.status] || "Без статуса",
+        }));
+        setCards(formattedTasks);
       }
+
 
       // Возвращаемся на главную страницу (закрываем модальное окно)
       navigate("/");

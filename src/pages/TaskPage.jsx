@@ -10,6 +10,14 @@ const TaskPage = ({ cards, setCards, token }) => {
   const currentCard = cards?.find(
     (card) => String(card._id || card.id) === String(id),
   );
+  // Карта для перевода английских статусов бэкенда на русский язык
+  const fromServerStatus = {
+    "No Status": "Без статуса",
+    "Ready": "Нужно сделать",       
+    "In Progress": "В работе",
+    "Testing": "Тестирование",
+    "Done": "Готово",
+  };
 
   // Функция для закрытия модального окна и возврата на главную доску
   const handleClose = () => {
@@ -27,19 +35,16 @@ const TaskPage = ({ cards, setCards, token }) => {
         return;
       }
 
-      const data = await api.deleteTask(targetId, token);
+      await api.deleteTask(targetId, token);
 
-      // Обновляем локальный стейт приложения (исключаем удаленную карточку)
-      setCards(data.tasks);
-
-      // Возвращаемся на главную
-      navigate("/");
-    } catch (error) {
-      console.error("Ошибка при удалении задачи:", error);
       setCards((prevCards) =>
-        prevCards.filter((card) => String(card._id) !== String(id)),
+        prevCards.filter((card) => String(card._id || card.id) !== String(targetId)),
       );
-      navigate("/");
+
+      navigate("/");    
+     } catch (error) {
+      console.error("Ошибка при удалении задачи:", error);
+      alert("Не удалось удалить задачу на сервере");
     }
   };
   // Функция для изменения задачи (например, смена статуса/колонки или текста)
@@ -58,27 +63,27 @@ const TaskPage = ({ cards, setCards, token }) => {
       }
       const toServerStatus = {
         "Без статуса": "No Status",
-        "Нужно сделать": "No Status",
+        "Нужно сделать": "Ready",
         "В работе": "In Progress",
-        Тестирование: "Testing",
-        Готово: "Done",
+        "Тестирование": "Testing",
+        "Готово": "Done",
         "No Status": "No Status",
+        "Ready": "Ready",
         "In Progress": "In Progress",
-        Testing: "Testing",
-        Done: "Done",
+        "Testing": "Testing",
+        "Done": "Done",
       };
       let inputStatus =
-        updatedFields.status || currentCard.status || "Нужно сделать";
-
-      let finalStatus =
         updatedFields.status || currentCard.status || "Без статуса";
+
+      let finalStatus = toServerStatus[inputStatus] || "No Status";
 
       const cleanTaskData = {
         title: String(
           updatedFields.title || currentCard.title || "Без названия",
         ).trim(),
         topic: String(finalTopic),
-        status: String(finalStatus), // 🚀 ИСПРАВЛЕНО: отправляем английский статус ('Testing', 'In Progress' и т.д.)
+        status: String(finalStatus), //отправляем английский статус ('Testing', 'In Progress' и т.д.)
         description: String(
           updatedFields.description !== undefined
             ? updatedFields.description
@@ -90,13 +95,16 @@ const TaskPage = ({ cards, setCards, token }) => {
       await api.updateTask(targetId, cleanTaskData, token);
 
       const freshData = await api.getTasks(token);
+      const serverTasks = freshData.tasks || freshData;
 
-      if (freshData && freshData.tasks && Array.isArray(freshData.tasks)) {
-        setCards(freshData.tasks);
-      } else if (Array.isArray(freshData)) {
-        setCards(freshData);
+      if (serverTasks && Array.isArray(serverTasks)) {
+        // Перед сохранением в стейт ОБЯЗАТЕЛЬНО форматируем английские статусы обратно в русские
+        const formattedTasks = serverTasks.map((task) => ({
+          ...task,
+          status: fromServerStatus[task.status] || "Без статуса",
+        }));
+        setCards(formattedTasks);
       }
-
       navigate("/");
     } catch (error) {
       console.error("Ошибка при обновлении задачи:", error);
