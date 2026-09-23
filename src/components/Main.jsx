@@ -20,7 +20,9 @@ const Main = ({ cards, onCardClick }) => {
             {/* Рендерим колонки и передаем в них соответствующие массивы Card */}
             {statusList.map((status) => {
               const filteredTasks =
-                cards?.filter((card) => card.status === status) || [];
+                cards?.filter(
+                  (card) => (card.status || card["Статус"]) === status
+                ) || [];
 
               return (
                 <Column

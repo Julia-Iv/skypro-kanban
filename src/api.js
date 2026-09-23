@@ -40,8 +40,11 @@ export const api = {
   // Создать новую задачу
    async createTask(taskData, token) {
     const response = await kanbanApi.post("", taskData, {
-      headers: getAuthHeaders(token),
-        
+            headers: {
+        ...getAuthHeaders(token),
+        'Content-Type': 'application/json', // Переопределяем удаление заголовка для успешного парсинга сервером
+      },
+
     });
     return response.data;
   },
@@ -49,8 +52,11 @@ export const api = {
 
   // Изменить задачу (включая смену статуса/колонки)
   async updateTask(taskId, taskData, token) {
-    const response = await kanbanApi.patch(`/${taskId}`, taskData, {
-      headers: getAuthHeaders(token),
+    const response = await kanbanApi.put(`/${taskId}`, taskData, {
+      headers: {
+        ...getAuthHeaders(token),
+        'Content-Type': 'application/json', // Переопределяем удаление заголовка для успешного парсинга сервером
+      },
     });
     return response.data;
   },

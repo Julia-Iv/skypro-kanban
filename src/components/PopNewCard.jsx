@@ -17,14 +17,6 @@ const PopNewCard = ({ setCards, token }) => {
     date: new Date(),
   });
 
-  const fromServerStatus = {
-    "No Status": "Без статуса",
-    "Ready": "Нужно сделать",       
-    "In Progress": "В работе",
-    "Testing": "Тестирование",
-    "Done": "Готово",
-  };
-
   const handleClose = (e) => {
     e?.preventDefault();
     navigate("/");
@@ -62,11 +54,10 @@ const PopNewCard = ({ setCards, token }) => {
       const taskToSend = {
         title: taskData.title.trim(),
         topic: String(finalTopic), 
+        status: String(taskData.status || "Без статуса"),
         description: taskData.description ? taskData.description.trim() : "",
-        date: formattedDate // Здесь гарантированно будет строка вида '2026-09-23T21:00:00Z'
+        date: formattedDate 
       };
-
-
 
       console.log("Отправляем на сервер для создания задачи:", taskToSend);
 
@@ -80,7 +71,7 @@ const PopNewCard = ({ setCards, token }) => {
       if (serverTasks && Array.isArray(serverTasks)) {
         const formattedTasks = serverTasks.map((task) => ({
           ...task,
-          status: fromServerStatus[task.status] || "Без статуса",
+          status: task.status || task["Статус"] || "Без статуса",
         }));
         setCards(formattedTasks);
       }

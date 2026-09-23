@@ -10,14 +10,6 @@ const TaskPage = ({ cards, setCards, token }) => {
   const currentCard = cards?.find(
     (card) => String(card._id || card.id) === String(id),
   );
-  // Карта для перевода английских статусов бэкенда на русский язык
-  const fromServerStatus = {
-    "No Status": "Без статуса",
-    "Ready": "Нужно сделать",       
-    "In Progress": "В работе",
-    "Testing": "Тестирование",
-    "Done": "Готово",
-  };
 
   // Функция для закрытия модального окна и возврата на главную доску
   const handleClose = () => {
@@ -61,37 +53,23 @@ const TaskPage = ({ cards, setCards, token }) => {
       if (!validTopics.includes(finalTopic)) {
         finalTopic = "Web Design";
       }
-      const toServerStatus = {
-        "Без статуса": "No Status",
-        "Нужно сделать": "Ready",
-        "В работе": "In Progress",
-        "Тестирование": "Testing",
-        "Готово": "Done",
-        "No Status": "No Status",
-        "Ready": "Ready",
-        "In Progress": "In Progress",
-        "Testing": "Testing",
-        "Done": "Done",
-      };
-      let inputStatus =
-        updatedFields.status || currentCard.status || "Без статуса";
-
-      let finalStatus = toServerStatus[inputStatus] || "No Status";
+      
+      const finalStatus = updatedFields.status || currentCard.status || "Без статуса";
 
       const cleanTaskData = {
         title: String(
           updatedFields.title || currentCard.title || "Без названия",
         ).trim(),
         topic: String(finalTopic),
-        status: String(finalStatus), //отправляем английский статус ('Testing', 'In Progress' и т.д.)
+        status: String(finalStatus), 
         description: String(
           updatedFields.description !== undefined
             ? updatedFields.description
             : currentCard.description || "",
         ).trim(),
         date: updatedFields.date || currentCard.date,
-
       };
+
 
       console.log("Финальный чистый JSON для отправки:", cleanTaskData);
       await api.updateTask(targetId, cleanTaskData, token);
@@ -100,11 +78,11 @@ const TaskPage = ({ cards, setCards, token }) => {
       const serverTasks = freshData.tasks || freshData;
 
       if (serverTasks && Array.isArray(serverTasks)) {
-        // Перед сохранением в стейт ОБЯЗАТЕЛЬНО форматируем английские статусы обратно в русские
-        const formattedTasks = serverTasks.map((task) => ({
+                const formattedTasks = serverTasks.map((task) => ({
           ...task,
-          status: fromServerStatus[task.status] || "Без статуса",
+          status: task.status || "Без статуса",
         }));
+
         setCards(formattedTasks);
       }
       navigate("/");

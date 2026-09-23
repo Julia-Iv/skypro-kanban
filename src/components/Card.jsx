@@ -16,9 +16,9 @@ const Card = (props) => {
   const task = props.card || props;
 
   const targetId = task?._id || task?.id;
-  const title = task?.title || "Без названия";
-  const date = task?.date;
-  const themeText = task?.topic || "Web Design";
+  const title = task?.["Заголовок"] || task?.title || "Без названия";
+  const date = task?.["Дата"] || task?.date;
+  const themeText = task?.["Категория"] || task?.topic || "Web Design";
 
   const topicStyles = {
     "Web Design": "_orange",

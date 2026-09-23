@@ -39,16 +39,9 @@ function App() {
       .then((data) => {
         const serverTasks = data.tasks || data;
 
-        const fromServerStatus = {
-          "No Status": "Без статуса",
-          "Ready": "Нужно сделать",       
-          "In Progress": "В работе",
-          "Testing": "Тестирование",
-          "Done": "Готово",
-        };
         const formattedTasks = serverTasks.map((task) => ({
           ...task,
-          status: fromServerStatus[task.status] || "Без статуса",
+          status: task.status || "Без статуса",
         }));
 
         setCards(formattedTasks);
