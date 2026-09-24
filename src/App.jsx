@@ -11,51 +11,105 @@ import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import { cardsData } from "./data.js";
+import { api } from "./api";
+import { Navigate } from "react-router-dom";
 
 function App() {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  //const [selectedCard, setSelectCard] = useState(null);
+  const [error, setError] = useState(null);
+  // Добавляем стейт для пользователя. При старте пытаемся взять его из localStorage
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  // Получаем токен из объекта пользователя, если он есть
+  const token = user?.token || null;
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setCards(cardsData);
+    // Если пользователь не залогинен, загрузку карточек делать не нужно
+    if (!token) {
       setIsLoading(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
+      return;
+    }
+    setIsLoading(true);
+    api
+      .getTasks(token)
+      .then((data) => {
+        const serverTasks = data.tasks || data;
+
+        const formattedTasks = serverTasks.map((task) => ({
+          ...task,
+          status: task.status || "Без статуса",
+        }));
+
+        setCards(formattedTasks);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("Не удалось загрузить задачи:", err);
+        setError("Ошибка загрузки данных. Пожалуйста, попробуйте позже.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [token]);
+  // Функция для выхода из аккаунта
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    setCards([]);
+    setError(null);
+  };
 
   return (
     <div className="wrapper" style={appStyles}>
-      {isLoading ? (
-        <div style={loaderStyles}>
-          <h2>Данные загружаются...</h2>
-        </div>
-      ) : (
-        <Routes>
-          <Route
-            path="/"
-            element={
+      <Routes>
+        <Route
+          path="/"
+          element={
+            user ? (
               <>
-                <Header />
-                <Main cards={cards} />
+                <Header user={user} />
+                {/* Если есть ошибка, выводим её сообщение, иначе рендерим доску */}
+                {error ? (
+                  <div style={loaderStyles}>
+                    <h2 style={{ color: "#ef5656" }}>{error}</h2>
+                  </div>
+                ) : (
+                  <Main cards={cards} isLoading={isLoading} />
+                )}
                 <Outlet />
               </>
-            }
-          >
-            <Route
-              path="exit"
-              element={<PopExit onConfirm={() => console.log("Выход")} />}
-            />
-            <Route path="add-task" element={<PopNewCard />} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        >
+          <Route path="exit" element={<PopExit onConfirm={handleLogout} />} />
+          <Route
+            path="add-task"
+            element={<PopNewCard setCards={setCards} token={token} />}
+          />
 
-            <Route path="task/:id" element={<TaskPage cards={cards} />} />
-          </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      )}
+          <Route
+            path="task/:id"
+            element={
+              <TaskPage cards={cards} setCards={setCards} token={token} />
+            }
+          />
+        </Route>
+        <Route
+          path="/login"
+          element={<LoginPage setUser={setUser} user={user} />}
+        />
+        <Route
+          path="/register"
+          element={<RegisterPage setUser={setUser} user={user} />}
+        />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </div>
   );
 }
@@ -69,13 +123,9 @@ const loaderStyles = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  height: "100vh",
+  height: "70vh",
   fontFamily: "sans-serif",
   color: "#565eef",
-};
-
-const contentStyles = {
-  padding: "20px",
 };
 
 export default App;
