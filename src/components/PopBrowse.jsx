@@ -167,7 +167,7 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
               <PopNewCardCalendar
                 taskData={editedCard}
                 setTaskData={setEditedCard}
-                isEdit={isEdit}
+                isEdit={true}
               />
             </div>
 

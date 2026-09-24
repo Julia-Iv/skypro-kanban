@@ -1,9 +1,21 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CalendarContent from "./CalendarContent";
 import CalendarPeriod from "./CalendarPeriod";
 
 const PopNewCardCalendar = ({ taskData, setTaskData, isEdit }) => {
+  const parseDate = (dateValue) => {
+    if (!dateValue) return null;
+    const parsed = new Date(dateValue);
+    return !isNaN(parsed.getTime()) ? parsed : null;
+  };
+  //Автоматически перематываем календарь на нужный месяц, когда открывается задача
+  useEffect(() => {
+    const validDate = parseDate(taskData?.selectedStartDate) || parseDate(taskData?.date);
+    if (validDate) {
+      setCurrentMonth(validDate);
+    }
+  }, [taskData?.selectedStartDate, taskData?.date]);
   // Вычисляем стартовую дату для инициализации отображаемого месяца
   const baseDate = taskData?.selectedStartDate || taskData?.date || new Date();
   const [currentMonth, setCurrentMonth] = useState(new Date(baseDate));
@@ -112,8 +124,8 @@ const PopNewCardCalendar = ({ taskData, setTaskData, isEdit }) => {
         </div>
         <CalendarContent
           currentDate={currentMonth}
-          selectedStartDate={taskData?.selectedStartDate}
-          selectedEndDate={taskData?.selectedEndDate}
+          selectedStartDate={parseDate(taskData?.selectedStartDate) || parseDate(taskData?.date)}
+          selectedEndDate={parseDate(taskData?.selectedEndDate)}
           onDateClick={handleDateClick}
         />
 
@@ -121,14 +133,16 @@ const PopNewCardCalendar = ({ taskData, setTaskData, isEdit }) => {
           type="hidden"
           id="datepick_value"
           value={
-            taskData?.selectedStartDate
-              ? taskData.selectedStartDate.toLocaleDateString("ru-RU")
+            parseDate(taskData?.selectedStartDate)
+              ? parseDate(taskData.selectedStartDate).toLocaleDateString("ru-RU")
               : ""
           }
+
         />
         <CalendarPeriod
-          selectedStartDate={taskData?.selectedStartDate}
-          selectedEndDate={taskData?.selectedEndDate}
+                    selectedStartDate={parseDate(taskData?.selectedStartDate) || parseDate(taskData?.date)}
+          selectedEndDate={parseDate(taskData?.selectedEndDate)}
+   
         />
       </div>
     </div>

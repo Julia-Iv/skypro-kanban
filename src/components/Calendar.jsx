@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   CalendarContainer,
@@ -13,9 +13,31 @@ import CalendarContent from "./CalendarContent";
 import CalendarPeriod from "./CalendarPeriod";
 
 const Calendar = ({ taskData, setTaskData }) => {
-  const baseDate = taskData?.date || taskData?.selectedStartDate || new Date();
+  const parseIncomingDate = (dateField) => {
+    if (!dateField) return null;
+    const parsed = new Date(dateField);
+    return !isNaN(parsed.getTime()) ? parsed : null;
+  };
+
+  // Нормализуем выбранную дату: всегда получаем чистый объект Date или null
+  const selectedDate = parseIncomingDate(taskData?.date) || parseIncomingDate(taskData?.selectedStartDate);
+
+  // Локальное состояние для навигации по месяцам (по умолчанию выбранная дата или текущий день)
+  const [currentMonth, setCurrentMonth] = useState(selectedDate || new Date());
+  {/*
+const baseDate = taskData?.date || taskData?.selectedStartDate || new Date();
   // Локальное состояние для навигации по месяцам (по умолчанию текущий месяц из taskData)
   const [currentMonth, setCurrentMonth] = useState(new Date(baseDate));
+*/}
+useEffect(() => {
+    if (taskData?.date || taskData?.selectedStartDate) {
+      const validDate = new Date(taskData.date || taskData.selectedStartDate);
+      // Проверяем на валидность даты перед установкой, чтобы не упасть в ошибку
+      if (!isNaN(validDate.getTime())) {
+        setCurrentMonth(validDate);
+      }
+    }
+  }, [taskData?.date, taskData?.selectedStartDate]);
 
   // Список названий месяцев для вывода в шапку
   const monthsRu = [
