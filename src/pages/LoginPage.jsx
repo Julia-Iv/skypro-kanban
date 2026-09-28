@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const LoginPage = () => {
   const { login: authLogin } = useAuth();

@@ -6,8 +6,8 @@ import PopNewCardCategories from "./PopNewCardCategories";
 import FormNewCreate from "./FormNewCreate";
 import { api } from "../api";
 
-import { useAuth } from "../context/AuthContext";
-import { useTasks } from "../context/TaskContext";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useTasks } from "../context/TaskContext.jsx";
 
 const PopNewCard = () => {
   const navigate = useNavigate();

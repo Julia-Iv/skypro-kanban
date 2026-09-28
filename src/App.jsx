@@ -10,8 +10,8 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import { Navigate } from "react-router-dom";
 
-import { AuthProvider, useAuth } from "./context/AuthContext.js";
-import { TaskProvider, useTasks } from "./context/TaskContext.js";
+import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
+import { TaskProvider, useTasks } from "./context/TaskContext.jsx";
 
 function AppContent() {
   // Достаем состояние авторизации и метод выхода напрямую из AuthContext

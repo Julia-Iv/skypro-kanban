@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import PopBrowse from "../components/PopBrowse";
 import { api } from "../api";
 
-import { useAuth } from "../context/AuthContext";
-import { useTasks } from "../context/TaskContext";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useTasks } from "../context/TaskContext.jsx";
 
 const TaskPage = () => {
   const { id } = useParams();
