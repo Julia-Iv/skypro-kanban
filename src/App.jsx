@@ -1,68 +1,26 @@
-import { useState, useEffect } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Main from "./components/Main.jsx";
 import PopNewCard from "./components/PopNewCard";
 import PopExit from "./components/PopExit";
-//import PopBrowse from "./components/PopBrowse";
 import TaskPage from "./pages/TaskPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
-import { cardsData } from "./data.js";
-import { api } from "./api";
 import { Navigate } from "react-router-dom";
 
-function App() {
-  const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  // Добавляем стейт для пользователя. При старте пытаемся взять его из localStorage
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+import { AuthProvider, useAuth } from "./context/AuthContext.js";
+import { TaskProvider, useTasks } from "./context/TaskContext.js";
 
-  // Получаем токен из объекта пользователя, если он есть
-  const token = user?.token || null;
+function AppContent() {
+  // Достаем состояние авторизации и метод выхода напрямую из AuthContext
+  const { user, logout } = useAuth();
 
-  useEffect(() => {
-    // Если пользователь не залогинен, загрузку карточек делать не нужно
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(true);
-    api
-      .getTasks(token)
-      .then((data) => {
-        const serverTasks = data.tasks || data;
+  // Достаем список задач, статус загрузки и ошибку напрямую из TaskContext
+  const { tasks, isLoading, error } = useTasks();
 
-        const formattedTasks = serverTasks.map((task) => ({
-          ...task,
-          status: task.status || "Без статуса",
-        }));
-
-        setCards(formattedTasks);
-        setError(null);
-      })
-      .catch((err) => {
-        console.error("Не удалось загрузить задачи:", err);
-        setError("Ошибка загрузки данных. Пожалуйста, попробуйте позже.");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [token]);
-  // Функция для выхода из аккаунта
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    setCards([]);
-    setError(null);
-  };
-
+  
   return (
     <div className="wrapper" style={appStyles}>
       <Routes>
@@ -78,7 +36,7 @@ function App() {
                     <h2 style={{ color: "#ef5656" }}>{error}</h2>
                   </div>
                 ) : (
-                  <Main cards={cards} isLoading={isLoading} />
+                  <Main cards={tasks} isLoading={isLoading} />
                 )}
                 <Outlet />
               </>
@@ -87,30 +45,28 @@ function App() {
             )
           }
         >
-          <Route path="exit" element={<PopExit onConfirm={handleLogout} />} />
-          <Route
-            path="add-task"
-            element={<PopNewCard setCards={setCards} token={token} />}
-          />
-
-          <Route
-            path="task/:id"
-            element={
-              <TaskPage cards={cards} setCards={setCards} token={token} />
-            }
-          />
+          <Route path="exit" element={<PopExit onConfirm={logout} />} />
+          <Route path="add-task" element={<PopNewCard />} />
+          <Route path="task/:id" element={<TaskPage />} />
         </Route>
-        <Route
-          path="/login"
-          element={<LoginPage setUser={setUser} user={user} />}
-        />
-        <Route
-          path="/register"
-          element={<RegisterPage setUser={setUser} user={user} />}
-        />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
+        {/* Маршрут для обработки несуществующих страниц */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
+  );
+}
+
+// Корневой компонент настраивает иерархию контекстов
+function App() {
+  return (
+    <AuthProvider>
+      <TaskProvider>
+        <AppContent />
+      </TaskProvider>
+    </AuthProvider>
   );
 }
 

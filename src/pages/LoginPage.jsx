@@ -2,8 +2,10 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api";
+import { useAuth } from "../context/AuthContext";
 
-const LoginPage = ({ setUser }) => {
+const LoginPage = () => {
+  const { login: authLogin } = useAuth();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -19,13 +21,8 @@ const LoginPage = ({ setUser }) => {
     try {
       // Отправляем запрос авторизации на бэкенд
       const data = await api.login({ login, password });
-
-      // Сервер возвращает объект пользователя с токеном внутри data.user
-      // Сохраняем его в localStorage, чтобы сессия не сбрасывалась при перезагрузке
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      // Обновляем глобальный стейт в App.jsx
-      setUser(data.user);
+      
+      authLogin(data.user);
 
       // Перенаправляем авторизованного пользователя на главную страницу
       navigate("/");

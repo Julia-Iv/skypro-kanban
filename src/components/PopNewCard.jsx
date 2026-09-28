@@ -6,8 +6,14 @@ import PopNewCardCategories from "./PopNewCardCategories";
 import FormNewCreate from "./FormNewCreate";
 import { api } from "../api";
 
-const PopNewCard = ({ setCards, token }) => {
+import { useAuth } from "../context/AuthContext";
+import { useTasks } from "../context/TaskContext";
+
+const PopNewCard = () => {
   const navigate = useNavigate();
+  const { token } = useAuth();
+  const { setTasks} = useTasks();
+
   // Создаем общее состояние для полей новой задачи
   const [taskData, setTaskData] = useState({
     title: "",
@@ -73,7 +79,7 @@ const PopNewCard = ({ setCards, token }) => {
           ...task,
           status: task.status || task["Статус"] || "Без статуса",
         }));
-        setCards(formattedTasks);
+        setTasks(formattedTasks);
       }
 
 

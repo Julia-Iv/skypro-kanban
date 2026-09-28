@@ -2,15 +2,17 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../api";
+import { useAuth } from "../context/AuthContext";
 
-const RegisterPage = ({ setUser }) => {
+const RegisterPage = () => {
+  const { login: authLogin } = useAuth(); // Достаем метод логина из контекста
   const [name, setName] = useState(""); // Имя пользователя
   const [login, setLogin] = useState(""); // Логин (email или никнейм)
   const [password, setPassword] = useState(""); // Пароль
   const [error, setError] = useState(null); // СНятие ошибок с сервера
   const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null); // Сбрасываем старую ошибку при новой попытке
 
@@ -26,30 +28,32 @@ const RegisterPage = ({ setUser }) => {
 
     try {
       // Отправляем запрос регистрации на бэкенд
-      const data = await api.register({ name: name.trim(), login: login.trim(), password: password.trim() });
+      const data = await api.register({
+        name: name.trim(),
+        login: login.trim(),
+        password: password.trim(),
+      });
       const userData = data?.user || data;
 
       // Проверяем, пришел ли пользователь в ответе сервера
       if (userData && userData.token) {
-        // Сохраняем его в localStorage 
-        localStorage.setItem("user", JSON.stringify(userData));
-        // Обновляем глобальный стейт в App.jsx, чтобы войти в приложение
-        setUser(userData);
-        // Перенаправляем пользователя на главную страницу доски
+        authLogin(userData);
         navigate("/");
       } else {
         setError("Сервер вернул некорректный ответ. Попробуйте еще раз.");
       }
-   } catch (err) {
+    } catch (err) {
       console.error("Полная ошибка регистрации в консоли:", err);
-      
+
       // ИСПРАВЛЕНО: Вытаскиваем точную причину ошибки, которую вернул бэкенд Sky.pro
       const serverErrorText = err.response?.data?.error;
-      
+
       if (serverErrorText) {
         setError(serverErrorText); // Сервер сам напишет, например: "Пользователь с таким email уже существует"
       } else {
-        setError("Не удалось зарегистрироваться. Проверьте правильность заполнения полей.");
+        setError(
+          "Не удалось зарегистрироваться. Проверьте правильность заполнения полей.",
+        );
       }
     }
   };
@@ -63,7 +67,9 @@ const RegisterPage = ({ setUser }) => {
 
         {/* Блок для вывода ошибок сервера */}
         {error && (
-          <p style={{ color: "#ef5656", fontSize: "14px", marginBottom: "15px" }}>
+          <p
+            style={{ color: "#ef5656", fontSize: "14px", marginBottom: "15px" }}
+          >
             {error}
           </p>
         )}

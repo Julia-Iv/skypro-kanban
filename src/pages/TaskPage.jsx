@@ -3,11 +3,18 @@ import { useParams, useNavigate } from "react-router-dom";
 import PopBrowse from "../components/PopBrowse";
 import { api } from "../api";
 
-const TaskPage = ({ cards, setCards, token }) => {
+import { useAuth } from "../context/AuthContext";
+import { useTasks } from "../context/TaskContext";
+
+const TaskPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const { token } = useAuth();
+  const { tasks, setTasks } = useTasks();
+
   // Находим нужную задачу в массиве данных по id
-  const currentCard = cards?.find(
+  const currentCard = tasks?.find(
     (card) => String(card._id || card.id) === String(id),
   );
 
@@ -29,7 +36,7 @@ const TaskPage = ({ cards, setCards, token }) => {
 
       await api.deleteTask(targetId, token);
 
-      setCards((prevCards) =>
+      setTasks((prevCards) =>
         prevCards.filter((card) => String(card._id || card.id) !== String(targetId)),
       );
 
@@ -83,7 +90,7 @@ const TaskPage = ({ cards, setCards, token }) => {
           status: task.status || "Без статуса",
         }));
 
-        setCards(formattedTasks);
+        setTasks(formattedTasks);
       }
       navigate("/");
     } catch (error) {
