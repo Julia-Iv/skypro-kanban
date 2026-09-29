@@ -37,11 +37,13 @@ const TaskPage = () => {
       await api.deleteTask(targetId, token);
 
       setTasks((prevCards) =>
-        prevCards.filter((card) => String(card._id || card.id) !== String(targetId)),
+        prevCards.filter(
+          (card) => String(card._id || card.id) !== String(targetId),
+        ),
       );
 
-      navigate("/");    
-     } catch (error) {
+      navigate("/");
+    } catch (error) {
       console.error("Ошибка при удалении задачи:", error);
       alert("Не удалось удалить задачу на сервере");
     }
@@ -60,15 +62,16 @@ const TaskPage = () => {
       if (!validTopics.includes(finalTopic)) {
         finalTopic = "Web Design";
       }
-      
-      const finalStatus = updatedFields.status || currentCard.status || "Без статуса";
+
+      const finalStatus =
+        updatedFields.status || currentCard.status || "Без статуса";
 
       const cleanTaskData = {
         title: String(
           updatedFields.title || currentCard.title || "Без названия",
         ).trim(),
         topic: String(finalTopic),
-        status: String(finalStatus), 
+        status: String(finalStatus),
         description: String(
           updatedFields.description !== undefined
             ? updatedFields.description
@@ -77,15 +80,14 @@ const TaskPage = () => {
         date: updatedFields.date || currentCard.date,
       };
 
-
       console.log("Финальный чистый JSON для отправки:", cleanTaskData);
       await api.updateTask(targetId, cleanTaskData, token);
+      const responseData = await api.updateTask(targetId, cleanTaskData, token);
+      const serverTasks = responseData.tasks || responseData;
 
-      const freshData = await api.getTasks(token);
-      const serverTasks = freshData.tasks || freshData;
 
       if (serverTasks && Array.isArray(serverTasks)) {
-                const formattedTasks = serverTasks.map((task) => ({
+        const formattedTasks = serverTasks.map((task) => ({
           ...task,
           status: task.status || "Без статуса",
         }));
