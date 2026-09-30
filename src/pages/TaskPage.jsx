@@ -81,7 +81,6 @@ const TaskPage = () => {
       };
 
       console.log("Финальный чистый JSON для отправки:", cleanTaskData);
-      await api.updateTask(targetId, cleanTaskData, token);
       const responseData = await api.updateTask(targetId, cleanTaskData, token);
       const serverTasks = responseData.tasks || responseData;
 
