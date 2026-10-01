@@ -1,6 +1,6 @@
 import React from "react";
-const PopBrowseForm = ({ card, isEdit }) => {
-  return (
+const PopBrowseForm = ({ card, isEdit, onChange }) => {
+ return (
     <form
       className="pop-browse__form form-browse"
       id="formBrowseCard"
@@ -12,10 +12,11 @@ const PopBrowseForm = ({ card, isEdit }) => {
         </label>
         <textarea
           className="form-browse__area"
-          name="text"
+          name="description"
           id="textArea01"
           readOnly={!isEdit}
-          defaultValue={card?.description || "Нет описания задачи..."}
+          value={card?.description || ""}
+          onChange={onChange}
           placeholder="Введите описание задачи..."
         ></textarea>
       </div>

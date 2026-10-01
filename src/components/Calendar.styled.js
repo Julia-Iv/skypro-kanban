@@ -82,11 +82,17 @@ export const CalendarCell = styled.div`
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  color: #94a6be;
+  color: ${props => props.$isActive ? "#ffffff !important" : (props.$isOtherMonth ? "#c4d1e2 !important" : "#94a6be !important")};
+   background-color: ${props => props.$isActive ? "#7a91b5 !important" : "transparent"};
   font-size: 10px;
   line-height: 1;
   letter-spacing: -0.2px;
   cursor: pointer;
+
+&:hover {
+    background-color: ${props => props.$isActive ? "#7a91b5 !important" : "#e8edf5"};
+    color: ${props => props.$isActive ? "#ffffff !important" : "#7a91b5 !important"};
+}
 `;
 export const CalendarNav = styled.div`
   display: flex !important;
@@ -107,7 +113,7 @@ export const CalendarNav = styled.div`
     gap: 12px;
   }
 
-  /* ИСПРАВЛЕНО: Стилизуем сами стрелочки и их SVG иконки */
+  /* Стилизуем  стрелочки и их SVG иконки */
   .nav__action {
     display: flex;
     align-items: center;

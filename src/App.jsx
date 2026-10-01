@@ -1,62 +1,72 @@
-import { useState, useEffect } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import Main from "./components/Main.jsx";
 import PopNewCard from "./components/PopNewCard";
 import PopExit from "./components/PopExit";
-//import PopBrowse from "./components/PopBrowse";
 import TaskPage from "./pages/TaskPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
-import { cardsData } from "./data.js";
+import { Navigate } from "react-router-dom";
 
-function App() {
-  const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  //const [selectedCard, setSelectCard] = useState(null);
+import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
+import { TaskProvider, useTasks } from "./context/TaskContext.jsx";
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCards(cardsData);
-      setIsLoading(false);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
+function AppContent() {
+  // Достаем состояние авторизации и метод выхода напрямую из AuthContext
+  const { user, logout } = useAuth();
 
+  // Достаем список задач, статус загрузки и ошибку напрямую из TaskContext
+  const { tasks, isLoading, error } = useTasks();
+
+  
   return (
     <div className="wrapper" style={appStyles}>
-      {isLoading ? (
-        <div style={loaderStyles}>
-          <h2>Данные загружаются...</h2>
-        </div>
-      ) : (
-        <Routes>
-          <Route
-            path="/"
-            element={
+      <Routes>
+        <Route
+          path="/"
+          element={
+            user ? (
               <>
-                <Header />
-                <Main cards={cards} />
+                <Header user={user} />
+                {/* Если есть ошибка, выводим её сообщение, иначе рендерим доску */}
+                {error ? (
+                  <div style={loaderStyles}>
+                    <h2 style={{ color: "#ef5656" }}>{error}</h2>
+                  </div>
+                ) : (
+                  <Main cards={tasks} isLoading={isLoading} />
+                )}
                 <Outlet />
               </>
-            }
-          >
-            <Route
-              path="exit"
-              element={<PopExit onConfirm={() => console.log("Выход")} />}
-            />
-            <Route path="add-task" element={<PopNewCard />} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        >
+          <Route path="exit" element={<PopExit onConfirm={logout} />} />
+          <Route path="add-task" element={<PopNewCard />} />
+          <Route path="task/:id" element={<TaskPage />} />
+        </Route>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
-            <Route path="task/:id" element={<TaskPage cards={cards} />} />
-          </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      )}
+        {/* Маршрут для обработки несуществующих страниц */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </div>
+  );
+}
+
+// Корневой компонент настраивает иерархию контекстов
+function App() {
+  return (
+    <AuthProvider>
+      <TaskProvider>
+        <AppContent />
+      </TaskProvider>
+    </AuthProvider>
   );
 }
 
@@ -69,13 +79,9 @@ const loaderStyles = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  height: "100vh",
+  height: "70vh",
   fontFamily: "sans-serif",
   color: "#565eef",
-};
-
-const contentStyles = {
-  padding: "20px",
 };
 
 export default App;
