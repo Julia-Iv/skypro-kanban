@@ -33,12 +33,27 @@ const PopNewCard = () => {
   // Функция обработки отправки формы на бэкенд
   const handleCreateTask = async (e) => {
     e?.preventDefault();
+    // ЗАЩИТА ОТ ПОВТОРНОГО КЛИКА: Если запрос уже идет, ничего не делаем
+    if (isLoading) return;
 
     // Валидация: проверяем, что название задачи заполнено
     if (!taskData.title.trim()) {
       setError("Пожалуйста, введите название задачи");
       return;
     }
+    //  Проверяем, что описание заполнено
+    if (!taskData.description.trim()) {
+      setError("Пожалуйста, заполните описание задачи");
+      return;
+    }
+
+    //  Проверяем, что категория выбрана
+    if (!taskData.category.trim()) {
+      setError("Пожалуйста, выберите категорию для задачи");
+      return;
+    }
+
+
     // Сбрасываем предыдущую ошибку и включаем индикатор загрузки
     setError(null);
     setIsLoading(true);

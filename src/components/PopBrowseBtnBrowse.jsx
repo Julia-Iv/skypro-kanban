@@ -42,7 +42,7 @@ const PopBrowseBtnBrowse = ({ onEditToggle, onDelete, isLoading }) => {
           // Если isLoading истина, цвет станет серым (#94A3B8), иначе — фиолетовым (#565EEF)
           color: isLoading ? "#94A3B8" : "#565EEF",
 
-          // Динамическое изменение цвета рамки при загрузке
+          // Динамическое  изменение цвета рамки при загрузке
           border: `1px solid ${isLoading ? "#94A3B8" : "#565EEF"}`,
         }}
       >
