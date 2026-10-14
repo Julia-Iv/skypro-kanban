@@ -13,12 +13,18 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
   if (!card) return null;
 
   const [isEdit, setIsEdit] = useState(false);
+
+  //Создаем стейты для обработки ошибок и состояния загрузки
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   // Создаем локальный изменяемый стейт для задачи на основе пропса card,
   // чтобы можно было редактировать даты и данные без мгновенной перезаписи оригинала
   const [editedCard, setEditedCard] = useState({ ...card });
   useEffect(() => {
     if (card) {
       setEditedCard({ ...card });
+      setError(null);
     }
   }, [card?._id, card?.id]);
 
@@ -34,13 +40,25 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
   // Сброс изменений при отмене
   const handleCancel = () => {
     setEditedCard({ ...card }); // Возвращаем исходное состояние карточки
+    setError(null);
     setIsEdit(false);
   };
 
   // функцию сохранения данных карточки
   const handleSave = async () => {
+    // название не должно быть пустым
+    if (!editedCard.title || !editedCard.title.trim()) {
+      setError("Название задачи не может быть пустым");
+      return;
+    }
+
+    // Сбрасываем ошибку и включаем загрузку
+    setError(null);
+    setIsLoading(true);
+
     try {
-      let apiDate = editedCard.selectedStartDate || editedCard.date || card.date;
+      let apiDate =
+        editedCard.selectedStartDate || editedCard.date || card.date;
 
       if (apiDate instanceof Date) {
         apiDate = apiDate.toISOString();
@@ -54,14 +72,13 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
       // Собираем измененные поля, которые требует API Skypro (status, description, date)
       const updatedFields = {
         id: card.id || card._id,
-        _id: card._id || card.id,
         title: String(editedCard.title || card.title || "Без названия").trim(),
         topic: String(editedCard.topic || "Web Design"),
-        status: String(editedCard.status || "Без статуса"), 
-        description: String(editedCard.description || "").trim(),
+        status: String(editedCard.status || "Без статуса"),
+        description:
+          String(editedCard.description || "").trim() || "Нет описания",
         date: apiDate,
       };
-
 
       console.log(
         "Кликнули 'Сохранить'. Отправляем поля на бэкенд:",
@@ -73,8 +90,31 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
       setIsEdit(false);
     } catch (error) {
       console.error("Не удалось сохранить карточку:", error);
+      setError(
+        error.message || "Не удалось сохранить изменения. Попробуйте позже.",
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
+  // Добавлен метод удаления задачи с перехватом ошибок
+  const handleDeleteClick = async () => {
+    if (!window.confirm("Вы уверены, что хотите удалить эту задачу?")) return;
+
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      await onDelete(card.id || card._id);
+      onClose(); // Закрываем модальное окно после успешного удаления
+    } catch (err) {
+      console.error("Не удалось удалить карточку:", err);
+      setError(err.message || "Не удалось удалить задачу. Попробуйте позже.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Добавляем обработчик для переключения статуса задачи
   const handleStatusChange = (newStatus) => {
     if (!isEdit) return; // Менять статус можно только в режиме редактирования
@@ -167,7 +207,7 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
               <PopNewCardCalendar
                 taskData={editedCard}
                 setTaskData={setEditedCard}
-                isEdit={true}
+                isEdit={isEdit}
               />
             </div>
 
@@ -177,13 +217,29 @@ const PopBrowse = ({ card, onClose, onDelete, onUpdate }) => {
                 onChangeTopic={handleTopicChange}
               />
             )}
+            {/*  БЛОК ВЫВОДА ОШИБКИ СЕРВЕРА */}
+            {error && (
+              <p
+                style={{
+                  color: "#f5222d",
+                  fontWeight: "500",
+                  margin: "15px 0 0 0",
+                  fontSize: "14px",
+                  textAlign: "center",
+                }}
+              >
+                {error}
+              </p>
+            )}
+
             <PopBrowseBtn
               isEdit={isEdit}
               onClose={onClose}
               onEditToggle={() => setIsEdit(true)}
-              onDelete={onDelete}
+              onDelete={handleDeleteClick}
               onSave={handleSave}
               onCancel={handleCancel}
+              isLoading={isLoading} // Пробрасываем стейт загрузки в кнопки карточки
             />
           </div>
         </div>

@@ -45,18 +45,26 @@ const RegisterPage = () => {
     } catch (err) {
       console.error("Полная ошибка регистрации в консоли:", err);
 
-      // ИСПРАВЛЕНО: Вытаскиваем точную причину ошибки, которую вернул бэкенд Sky.pro
-      const serverErrorText = err.response?.data?.error;
+      // 1. ПРИОРИТЕТ: Вытаскиваем сообщение, проброшенное вашим интерцептором из api.js
+      const interceptorMessage = err.message;
 
-      if (serverErrorText) {
-        setError(serverErrorText); // Сервер сам напишет, например: "Пользователь с таким email уже существует"
+      // 2. РЕЗЕРВ: Если интерцептор не сработал, смотрим напрямую в JSON ответа бэкенда Skypro
+      const serverMessage = err.response?.data?.message;
+      const serverErrorField = err.response?.data?.error;
+
+      if (interceptorMessage && interceptorMessage !== "Network Error" && !interceptorMessage.includes("status code")) {
+        setError(interceptorMessage);
+      } else if (serverMessage) {
+        setError(serverMessage); // "Пользователь с таким логином уже существует"
+      } else if (serverErrorField) {
+        setError(serverErrorField);
       } else {
         setError(
-          "Не удалось зарегистрироваться. Проверьте правильность заполнения полей.",
+          "Не удалось зарегистрироваться. Проверьте правильность заполнения полей или попробуйте позже.",
         );
       }
     }
-  };
+  }
 
   return (
     <div style={overlayStyles}>

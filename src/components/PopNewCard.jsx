@@ -12,7 +12,10 @@ import { useTasks } from "../context/TaskContext.jsx";
 const PopNewCard = () => {
   const navigate = useNavigate();
   const { token } = useAuth();
-  const { setTasks} = useTasks();
+  const { setTasks } = useTasks();
+
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Создаем общее состояние для полей новой задачи
   const [taskData, setTaskData] = useState({
@@ -30,48 +33,70 @@ const PopNewCard = () => {
   // Функция обработки отправки формы на бэкенд
   const handleCreateTask = async (e) => {
     e?.preventDefault();
+    // ЗАЩИТА ОТ ПОВТОРНОГО КЛИКА: Если запрос уже идет, ничего не делаем
+    if (isLoading) return;
 
     // Валидация: проверяем, что название задачи заполнено
     if (!taskData.title.trim()) {
-      alert("Пожалуйста, введите название задачи");
+      setError("Пожалуйста, введите название задачи");
       return;
     }
-        try {
+    //  Проверяем, что описание заполнено
+    if (!taskData.description.trim()) {
+      setError("Пожалуйста, заполните описание задачи");
+      return;
+    }
+
+    //  Проверяем, что категория выбрана
+    if (!taskData.category.trim()) {
+      setError("Пожалуйста, выберите категорию для задачи");
+      return;
+    }
+
+
+    // Сбрасываем предыдущую ошибку и включаем индикатор загрузки
+    setError(null);
+    setIsLoading(true);
+
+    try {
       //  Форматируем дату в ISO-строку, если это объект Date
-            let formattedDate = taskData.date || new Date();
+      let formattedDate = taskData.date || new Date();
       if (formattedDate instanceof Date) {
         // Убираем миллисекунды, сохраняя Z
-        formattedDate = formattedDate.toISOString().replace(/\.\d{3}/, ''); 
+        formattedDate = formattedDate.toISOString().replace(/\.\d{3}/, "");
       } else if (typeof formattedDate === "string") {
         // Если это строка, проверяем наличие Z. Если её нет — дописываем
-        if (formattedDate.includes('.')) {
-          formattedDate = formattedDate.split('.')[0] + 'Z';
-        } else if (!formattedDate.endsWith('Z')) {
-          formattedDate = formattedDate + 'Z';
+        if (formattedDate.includes(".")) {
+          formattedDate = formattedDate.split(".")[0] + "Z";
+        } else if (!formattedDate.endsWith("Z")) {
+          formattedDate = formattedDate + "Z";
         }
       } else {
-        formattedDate = new Date().toISOString().replace(/\.\d{3}/, '');
+        formattedDate = new Date().toISOString().replace(/\.\d{3}/, "");
       }
 
       // Список строго валидных категорий для бэкенда Skypro
       const validTopics = ["Web Design", "Research", "Copywriting"];
-      let finalTopic = validTopics.includes(taskData.category) ? taskData.category : "Web Design";
+      let finalTopic = validTopics.includes(taskData.category)
+        ? taskData.category
+        : "Web Design";
 
       const taskToSend = {
         title: taskData.title.trim(),
-        topic: String(finalTopic), 
+        topic: String(finalTopic),
         status: String(taskData.status || "Без статуса"),
-        description: taskData.description ? taskData.description.trim() : "",
-        date: formattedDate 
+        description:
+          taskData.description && taskData.description.trim() !== ""
+            ? taskData.description.trim()
+            : "Описание отсутствует",
+        date: formattedDate,
       };
 
       console.log("Отправляем на сервер для создания задачи:", taskToSend);
 
-
       // Отправляем на сервер адаптированный объект taskToSend вместо taskData
       const data = await api.createTask(taskToSend, token);
       const serverTasks = data?.tasks || data;
-
 
       // Добавляем новую карточку в глобальный стейт приложения
       if (serverTasks && Array.isArray(serverTasks)) {
@@ -82,15 +107,19 @@ const PopNewCard = () => {
         setTasks(formattedTasks);
       }
 
-
       // Возвращаемся на главную страницу (закрываем модальное окно)
       navigate("/");
     } catch (error) {
       console.error("Ошибка при создании задачи:", error);
-      const message = error.response?.data?.error || "Проверьте заполнение полей.";
-      alert(`Не удалось создать задачу: ${message}`);
+
+      // Читаем текст ошибки, созданный интерцептором Axios в api.js
+      setError(error.message || "Не удалось создать задачу. Попробуйте позже.");
+    } finally {
+      // Выключаем режим загрузки при любом исходе запроса
+      setIsLoading(false);
     }
   };
+
   return (
     <div
       className="pop-new-card"
@@ -130,7 +159,21 @@ const PopNewCard = () => {
                 taskData={taskData}
                 setTaskData={setTaskData}
               />
-              <FormNewCreate onCancel={handleClose} />
+              {/*  БЛОК ВЫВОДА ОШИБКИ ПОЛЬЗОВАТЕЛЮ */}
+              {error && (
+                <p
+                  style={{
+                    color: "#f5222d",
+                    fontWeight: "500",
+                    margin: "10px 0 0 0",
+                    fontSize: "14px",
+                    textAlign: "center",
+                  }}
+                >
+                  {error}
+                </p>
+              )}
+              <FormNewCreate onCancel={handleClose} isLoading={isLoading} />
             </form>
           </div>
         </div>

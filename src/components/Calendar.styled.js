@@ -63,7 +63,7 @@ export const CalendarDayName = styled.div`
 `;
 export const CalendarCells = styled.div`
   width: 182px;
-  height: 126px;
+  min-height: 126px;
   display: flex;
   flex-wrap: wrap;
   &,

@@ -1,30 +1,44 @@
 import PopBrowseBtnBrowse from "./PopBrowseBtnBrowse";
-import PopBrowseBtnExit from "./PopBrowseBtnEdit";
+import PopBrowseBtnEdit from "./PopBrowseBtnEdit";
 
-const PopBrowseBtn = ({ isEdit, onClose, onEditToggle, onDelete, onSave, onCancel }) => {
+const PopBrowseBtn = ({
+  isEdit,
+  onClose,
+  onEditToggle,
+  onDelete,
+  onSave,
+  onCancel,
+  isLoading,
+}) => {
   return (
     <div className="pop-browse__btn-browse">
-      {/* 1. Левая группа кнопок меняется в зависимости от режима isEdit */}
-      <div className="btn-group" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+      {/*  Левая группа кнопок меняется в зависимости от режима isEdit */}
+      <div
+        className="btn-group"
+        style={{ display: "flex", gap: "8px", alignItems: "center" }}
+      >
         {isEdit ? (
-          <PopBrowseBtnExit 
-            onSave={onSave} 
-            onCancel={onCancel} 
-            onDelete={onDelete} 
+          <PopBrowseBtnEdit
+            onSave={onSave}
+            onCancel={onCancel}
+            onDelete={onDelete}
+            isLoading={isLoading}
           />
         ) : (
-          <PopBrowseBtnBrowse 
-            onEditToggle={onEditToggle} 
-            onDelete={onDelete} 
+          <PopBrowseBtnBrowse
+            onEditToggle={onEditToggle}
+            onDelete={onDelete}
+            isLoading={isLoading}
           />
         )}
       </div>
 
-      {/* 2. Правая кнопка "Закрыть" видна всегда */}
-      <button 
-        className="btn-browse__close _btn-bg _hover01" 
-        type="button" 
+      {/*  Правая кнопка "Закрыть" видна всегда */}
+      <button
+        className="btn-browse__close _btn-bg _hover01"
+        type="button"
         onClick={onClose}
+        disabled={isLoading} // Блокируем закрытие окна, пока идет сохранение или удаление
         style={{ marginLeft: "auto" }}
       >
         Закрыть
