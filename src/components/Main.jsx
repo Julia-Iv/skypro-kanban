@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { StyledMain, MainBlock, MainContent } from "./Main.styled";
 
-import Column from "./column";
+import Column from "./Column";
 
 const Main = ({ cards, onCardClick }) => {
   const statusList = [

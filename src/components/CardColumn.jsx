@@ -1,15 +1,13 @@
-import Cards from "./Cards"
+import Card from "./Card";
 const CardColumn = () => {
+  return (
+    <div className="main__column column">
+      <div className="column__title">
+        <p>Без статуса</p>
+      </div>
+      <Card />
+    </div>
+  );
+};
 
-    return (
-            <div className="main__column column">
-                  <div className="column__title">
-                    <p>Без статуса</p>
-                  </div>
-                  <Cards />
-                  </div>
-
-    )
-}
-
-export default CardColumn
+export default CardColumn;
