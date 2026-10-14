@@ -34,13 +34,16 @@ const handleGlobalError = (error, defaultMessage) => {
         ),
       );
     }
-
+    // Сначала ищем понятный текст ошибки в поле message от бэкенда
+    if (error.response.data && error.response.data.message) {
+      return Promise.reject(new Error(error.response.data.message));
+    }
     // Если бэкенд прислал штатную ошибку валидации/бизнес-логики (например, 400 или 401)
     if (error.response.data && error.response.data.error) {
       return Promise.reject(new Error(error.response.data.error));
     }
   }
-  // Сценарий 2: Запрос ушел, но ответа нет вообще (Нет интернета или сервер полностью отключен)
+  //  Запрос ушел, но ответа нет вообще (Нет интернета или сервер полностью отключен)
   else if (error.request) {
     return Promise.reject(
       new Error(
@@ -49,7 +52,7 @@ const handleGlobalError = (error, defaultMessage) => {
     );
   }
 
-  // Сценарий 3: Любая другая непредвиденная ошибка
+  // Любая другая непредвиденная ошибка
   return Promise.reject(new Error(error.message || defaultMessage));
 };
 

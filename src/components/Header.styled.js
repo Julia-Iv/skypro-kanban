@@ -102,3 +102,58 @@ flex-shrink: 0;
     color: #33399b;
   }
 `;
+
+export const PopUserExitBtn = styled.button`
+  display: block;
+  margin: 20px auto 0 auto;    /* Центрирует кнопку и делает отступ сверху от почты */
+  width: 72px;
+  height: 30px;
+  background: transparent;    /* Прозрачный фон */
+  color: #565EEF;             /* Фиолетовый цвет текста */
+  border: 1px solid #565EEF;   /* Фиолетовая рамка */
+  border-radius: 4px;         /* Скругление углов */
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 28px;          /* Центрирует текст по вертикали */
+  text-align: center;
+  text-decoration: none;      /* Убирает стандартное подчеркивание ссылки */
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #565EEF; /* При наведении закрашивается фиолетовым */
+    color: #FFFFFF;            /* Текст становится белым */
+  }
+`;
+export const PopUserSet = styled.div`
+  display: block;
+  position: absolute;
+  top: 42px;
+  right: 0;
+  width: 213px;
+  height: auto;
+  border-radius: 10px;
+  border: 0.7px solid rgba(148, 166, 190, 0.4);
+  background: #FFF;
+  box-shadow: 0px 10px 30px 0px rgba(26, 54, 98, 0.05);
+  padding: 34px;
+  text-align: center;
+  z-index: 5;
+
+  .pop-user-set__name {
+    color: #000;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    margin-bottom: 4px;
+  }
+  .pop-user-set__mail {
+    color: #94A6BE;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    letter-spacing: -0.14px;
+    margin-bottom: 0;
+  }
+`;
