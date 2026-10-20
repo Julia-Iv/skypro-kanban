@@ -1,50 +1,58 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { MainColumn } from "../components/Main.styled";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
   return (
-    <div style={containerStyles}>
+    <MainColumn style={containerStyles}>
       <h1 style={textStyles}> 404 - Страница не найдена</h1>
-      <button style={buttonStyles} onClick={() => navigate("/")}>
+      <button
+        style={buttonStyles}
+        onClick={() => navigate("/")}
+        onMouseEnter={(e) => (e.target.style.backgroundColor = "#243347")} // Эффект при наведении
+        onMouseLeave={(e) => (e.target.style.backgroundColor = "#334155")}
+      >
         На главную
       </button>
-    </div>
+    </MainColumn>
   );
 };
 const containerStyles = {
-  display: "flex",
+ display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  minHeight: "100vh", // Растягивает блок на всю высоту экрана
-  width: "100vw", // Растягивает блок на всю ширину экрана
-  backgroundColor: "#eaeef6", // Такой же цвет фона, как у всего приложения
-  fontFamily: "sans-serif",
+  minHeight: "80vh", // Оставляем запас под возможный хедер/футер
+  backgroundColor: "#eaeef6", // Ваш цвет фона всего приложения
   flexDirection: "column",
   gap: "24px",
+  padding: "40px",
+  borderRadius: "8px",
 };
 
 // Стили для заголовка (крупный шрифт и заглавные буквы)
 const textStyles = {
-  fontSize: "48px", // Крупный размер шрифта
-  fontWeight: "bold",
-  color: "#c72828", // Фирменный фиолетовый цвет (как у вашего лоадера)
+  fontSize: "32px", 
+  fontWeight: "600",
+  color: "#94a3b8", // Тот же цвет, что и у заглушки в колонках канбана
   textAlign: "center",
-  textTransform: "uppercase", // Автоматически делает все буквы БОЛЬШИМИ
-  letterSpacing: "2px", // Небольшой красивый отступ между буквами
+  textTransform: "uppercase", 
+  letterSpacing: "1px", 
   padding: "0 20px",
+  fontStyle: "italic", // Курсив, как у заглушки «Новых задач нет»
 };
 
 const buttonStyles = {
-  padding: "12px 24px",
-  fontSize: "16px",
+  padding: "10px 24px",
+  fontSize: "14px",
   fontWeight: "600",
   color: "#ffffff",
-  backgroundColor: "#c72828", // Фирменный фиолетовый цвет
+  backgroundColor: "#334155", // Спокойный темный оттенок (slate-700) вместо агрессивного красного
   border: "none",
-  borderRadius: "8px",
+  borderRadius: "4px",
   cursor: "pointer",
-  transition: "background-color 0.2s ease, transform 0.1s ease",
+  transition: "background-color 0.2s ease",
   outline: "none",
 };
+
 export default NotFoundPage;
